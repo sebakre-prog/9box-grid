@@ -6,205 +6,207 @@
 <title>9-Box Grid – Talentmanagement</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #f0f2f5;
-    --surface: #ffffff;
-    --surface2: #f7f8fa;
-    --border: #dde1e8;
-    --text: #1a1d26;
-    --muted: #7a8099;
-    --accent: #2a5bd7;
+:root{
+  --bg:#f0f2f5;--surface:#fff;--surface2:#f7f8fa;--border:#dde1e8;
+  --text:#1a1d26;--muted:#7a8099;--accent:#2a5bd7;
+  --box-star:#d4f0d4;--box-star-b:#5db85d;--box-star-t:#1a6b1a;
+  --box-high:#e0f5e0;--box-high-b:#7ac87a;--box-high-t:#2a7a2a;
+  --box-solid:#eaf5d8;--box-solid-b:#9ac850;--box-solid-t:#4a7010;
+  --box-future:#dce8fc;--box-future-b:#6090e0;--box-future-t:#1a3d9a;
+  --box-core:#e8e8fa;--box-core-b:#8888cc;--box-core-t:#2e2e80;
+  --box-growth:#f0ddf8;--box-growth-b:#b070d0;--box-growth-t:#6a1a90;
+  --box-puzzle:#fff3cc;--box-puzzle-b:#d4a020;--box-puzzle-t:#7a5500;
+  --box-consider:#ffe8cc;--box-consider-b:#d07020;--box-consider-t:#7a3500;
+  --box-risk:#fdd8d8;--box-risk-b:#d05050;--box-risk-t:#7a1a1a;
+  --dept-cd:#1a56db;--dept-cx:#0e9f6e;--dept-npo:#9333ea;--dept-def:#64748b;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;min-height:100vh;}
+.app{display:flex;flex-direction:column;height:100vh;overflow:hidden;}
 
-    --box-star:     #d4f0d4; --box-star-b:     #5db85d; --box-star-t:     #1a6b1a;
-    --box-high:     #e0f5e0; --box-high-b:     #7ac87a; --box-high-t:     #2a7a2a;
-    --box-solid:    #eaf5d8; --box-solid-b:    #9ac850; --box-solid-t:    #4a7010;
-    --box-future:   #dce8fc; --box-future-b:   #6090e0; --box-future-t:   #1a3d9a;
-    --box-core:     #e8e8fa; --box-core-b:     #8888cc; --box-core-t:     #2e2e80;
-    --box-growth:   #f0ddf8; --box-growth-b:   #b070d0; --box-growth-t:   #6a1a90;
-    --box-puzzle:   #fff3cc; --box-puzzle-b:   #d4a020; --box-puzzle-t:   #7a5500;
-    --box-consider: #ffe8cc; --box-consider-b: #d07020; --box-consider-t: #7a3500;
-    --box-risk:     #fdd8d8; --box-risk-b:     #d05050; --box-risk-t:     #7a1a1a;
-  }
+header{padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;border-bottom:1px solid var(--border);background:var(--surface);box-shadow:0 1px 4px rgba(0,0,0,.06);flex-shrink:0;}
+.header-title h1{font-family:'DM Serif Display',serif;font-size:1.8rem;line-height:1.1;}
+.header-title h1 span{color:var(--accent);font-style:italic;}
+.header-title p{color:var(--muted);font-size:.85rem;margin-top:.15rem;}
+.header-right{display:flex;align-items:center;gap:.65rem;flex-shrink:0;}
+#syncStatus{font-size:.8rem;font-weight:500;padding:.28rem .7rem;border-radius:20px;border:1px solid;transition:all .3s;}
+.sync-local{background:#f0f2f5;border-color:#aab0c0;color:#4a5568;}
+.sync-connecting{background:#fff8e0;border-color:#d4a020;color:#7a5500;}
+.sync-live{background:#e8f8e8;border-color:#5db85d;color:#1a6b1a;}
+.sync-saving{background:#e8eeff;border-color:#6090e0;color:#1a3d9a;}
+.sync-ok{background:#e8f8e8;border-color:#5db85d;color:#1a6b1a;}
+.sync-error{background:#fdd8d8;border-color:#d05050;color:#7a1a1a;}
+.btn{padding:.5rem 1rem;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:500;cursor:pointer;border:1px solid var(--border);transition:all .2s;}
+.btn-ghost{background:transparent;color:var(--muted);}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent);}
+.btn-primary:hover{background:#1e4bbf;}
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; overflow-x: hidden; }
-  .app { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+.stats-bar{display:flex;gap:2rem;padding:.6rem 2rem;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;}
+.stat{text-align:center;}
+.stat-val{font-family:'DM Serif Display',serif;font-size:1.4rem;color:var(--accent);line-height:1;}
+.stat-label{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-top:.1rem;}
 
-  /* Header */
-  header {
-    padding: 1.2rem 2rem;
-    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-    flex-shrink: 0;
-  }
-  .header-title h1 { font-family: 'DM Serif Display', serif; font-size: 1.75rem; color: var(--text); line-height: 1.1; }
-  .header-title h1 span { color: var(--accent); font-style: italic; }
-  .header-title p { color: var(--muted); font-size: 0.82rem; margin-top: 0.15rem; }
-  .header-right { display: flex; align-items: center; gap: 0.65rem; flex-shrink: 0; }
+.filter-bar{display:flex;align-items:center;gap:.55rem;padding:.5rem 2rem;border-bottom:1px solid var(--border);background:var(--surface2);flex-shrink:0;flex-wrap:wrap;}
+.f-label{font-size:.78rem;color:var(--muted);font-weight:500;}
+.filter-select{background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:.28rem .65rem;font-family:'DM Sans',sans-serif;font-size:.82rem;cursor:pointer;outline:none;transition:border-color .2s;min-width:125px;}
+.filter-select.active{border-color:var(--accent);background:#eef2fd;color:var(--accent);font-weight:600;}
+.filter-divider{width:1px;height:16px;background:var(--border);}
+.filter-clear{font-size:.78rem;color:var(--muted);background:none;border:1px solid var(--border);border-radius:6px;padding:.28rem .65rem;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.filter-clear:hover{border-color:var(--accent);color:var(--accent);}
+.dept-legend{display:flex;align-items:center;gap:1rem;margin-left:auto;}
+.dept-legend-item{display:flex;align-items:center;gap:.35rem;font-size:.78rem;color:var(--muted);}
+.dept-dot{width:10px;height:10px;border-radius:50%;}
 
-  #syncStatus {
-    font-size: 0.76rem; font-weight: 500;
-    padding: 0.28rem 0.7rem; border-radius: 20px; border: 1px solid; transition: all 0.3s;
-  }
-  .sync-connecting { background:#fff8e0; border-color:#d4a020; color:#7a5500; }
-  .sync-live       { background:#e8f8e8; border-color:#5db85d; color:#1a6b1a; }
-  .sync-saving     { background:#e8eeff; border-color:#6090e0; color:#1a3d9a; }
-  .sync-ok         { background:#e8f8e8; border-color:#5db85d; color:#1a6b1a; }
-  .sync-error      { background:#fdd8d8; border-color:#d05050; color:#7a1a1a; }
+.main{display:flex;flex:1;overflow:hidden;}
 
-  .btn { padding: 0.45rem 1rem; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.81rem; font-weight: 500; cursor: pointer; border: 1px solid var(--border); transition: all 0.2s; }
-  .btn-ghost { background: transparent; color: var(--muted); }
-  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
-  .btn-primary { background: var(--accent); color: white; border-color: var(--accent); }
-  .btn-primary:hover { background: #1e4bbf; }
+.sidebar{width:295px;flex-shrink:0;border-right:1px solid var(--border);background:var(--surface);display:flex;flex-direction:column;overflow:hidden;}
+.sidebar-header{padding:.9rem 1.2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.sidebar-header h3{font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:500;}
+.btn-add{background:var(--accent);color:#fff;border:none;border-radius:5px;padding:.3rem .85rem;font-size:.82rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.btn-add:hover{background:#1e4bbf;}
+.employee-list{overflow-y:auto;flex:1;padding:.6rem;}
+.employee-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.75rem 1rem;margin-bottom:.4rem;cursor:pointer;transition:all .14s;position:relative;}
+.employee-card:hover{border-color:var(--accent);background:#f5f7ff;}
+.employee-card.selected{border-color:var(--accent);background:#eef2fd;}
+.emp-name{font-size:.9rem;font-weight:600;padding-right:1.4rem;}
+.emp-role{font-size:.78rem;color:var(--muted);margin-top:.1rem;}
+.emp-badge{display:inline-block;margin-top:.3rem;font-size:.7rem;font-weight:600;padding:.1rem .5rem;border-radius:20px;border:1px solid;}
+.emp-delete{position:absolute;right:.55rem;top:.55rem;background:none;border:none;color:var(--muted);cursor:pointer;font-size:.85rem;opacity:0;padding:.1rem .28rem;border-radius:4px;}
+.employee-card:hover .emp-delete{opacity:1;}
+.emp-delete:hover{color:#d05050;background:#fdd8d8;}
 
-  /* Stats */
-  .stats-bar { display: flex; gap: 2rem; padding: 0.55rem 2rem; border-bottom: 1px solid var(--border); background: var(--surface); flex-shrink: 0; }
-  .stat { text-align: center; }
-  .stat-val { font-family: 'DM Serif Display', serif; font-size: 1.25rem; color: var(--accent); line-height: 1; }
-  .stat-label { font-size: 0.63rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; margin-top: 0.1rem; }
+.grid-area{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.grid-scroll{flex:1;overflow-y:auto;display:flex;flex-direction:column;}
+.grid-section{display:flex;flex-direction:column;padding:1.1rem 1.5rem .5rem;gap:.65rem;flex-shrink:0;}
+.axis-label-top{text-align:center;font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:500;}
+.grid-wrapper{display:flex;gap:.5rem;height:440px;}
+.axis-label-left{writing-mode:vertical-rl;transform:rotate(180deg);font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0;align-self:stretch;}
+.grid-inner{flex:1;display:flex;flex-direction:column;}
+.grid-and-yticks{display:flex;flex:1;gap:6px;}
+.y-tick-labels{display:flex;flex-direction:column;justify-content:space-around;flex-shrink:0;width:52px;text-align:right;padding:2px 8px 2px 0;}
+.y-tick-labels span{font-size:.78rem;color:var(--muted);}
+.grid-container{flex:1;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:7px;}
+.x-tick-labels{display:flex;justify-content:space-around;padding:5px 0 0 60px;}
+.x-tick-labels span{font-size:.78rem;color:var(--muted);}
 
-  /* Filters */
-  .filter-bar { display: flex; align-items: center; gap: 0.55rem; padding: 0.5rem 2rem; border-bottom: 1px solid var(--border); background: var(--surface2); flex-shrink: 0; }
-  .f-label { font-size: 0.71rem; color: var(--muted); font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; flex-shrink: 0; }
-  .filter-select { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; color: var(--text); padding: 0.26rem 0.6rem; font-family: 'DM Sans', sans-serif; font-size: 0.79rem; cursor: pointer; outline: none; transition: border-color 0.2s; min-width: 125px; }
-  .filter-select:focus { border-color: var(--accent); }
-  .filter-select.active { border-color: var(--accent); background: #eef2fd; color: var(--accent); font-weight: 600; }
-  .filter-divider { width: 1px; height: 15px; background: var(--border); margin: 0 0.1rem; }
-  .filter-clear { font-size: 0.74rem; color: var(--muted); background: none; border: 1px solid var(--border); border-radius: 6px; padding: 0.26rem 0.6rem; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
-  .filter-clear:hover { border-color: var(--accent); color: var(--accent); }
+.grid-cell{border-radius:10px;border:1px solid;padding:.65rem .75rem;display:flex;flex-direction:column;overflow:hidden;transition:all .15s;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.grid-cell.drag-over{transform:scale(1.02);box-shadow:0 4px 16px rgba(42,91,215,.2);}
+.cell-header{display:flex;align-items:flex-start;justify-content:space-between;gap:.4rem;margin-bottom:.45rem;flex-shrink:0;}
+.cell-num{font-size:1.2rem;line-height:1;}
+.cell-title{font-size:.78rem;font-weight:700;text-align:right;line-height:1.3;}
+.cell-chips{display:flex;flex-wrap:wrap;gap:5px;overflow-y:auto;flex:1;align-content:flex-start;}
 
-  /* Main */
-  .main { display: flex; flex: 1; overflow: hidden; }
+.chip{font-size:.78rem;font-weight:600;padding:.3rem .65rem;border-radius:7px;color:#fff;cursor:grab;user-select:none;transition:all .15s;display:flex;flex-direction:column;gap:2px;line-height:1.3;box-shadow:0 1px 4px rgba(0,0,0,.18);min-width:72px;}
+.chip:hover{transform:translateY(-2px);box-shadow:0 4px 10px rgba(0,0,0,.22);}
+.chip:active{cursor:grabbing;}
+.chip-name{font-weight:700;font-size:.82rem;}
+.chip-meta{font-size:.68rem;opacity:.85;font-weight:400;}
+.chip.filtered-out{opacity:.15;pointer-events:none;}
+.chip[data-dept="CD"]{background:var(--dept-cd);}
+.chip[data-dept="CX"]{background:var(--dept-cx);}
+.chip[data-dept="NPO"]{background:var(--dept-npo);}
+.chip[data-dept=""]{background:var(--dept-def);}
+.unassigned-note{font-size:.78rem;color:var(--muted);font-style:italic;opacity:.55;}
 
-  /* Sidebar */
-  .sidebar { width: 295px; flex-shrink: 0; border-right: 1px solid var(--border); background: var(--surface); display: flex; flex-direction: column; overflow: hidden; box-shadow: 2px 0 8px rgba(0,0,0,0.04); }
-  .sidebar-header { padding: 0.9rem 1.2rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
-  .sidebar-header h3 { font-size: 0.73rem; letter-spacing: 0.11em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
-  .btn-add { background: var(--accent); color: white; border: none; border-radius: 5px; padding: 0.28rem 0.8rem; font-size: 0.77rem; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.2s; }
-  .btn-add:hover { background: #1e4bbf; }
-  .employee-list { overflow-y: auto; flex: 1; padding: 0.55rem; }
-  .employee-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 0.7rem 1rem; margin-bottom: 0.38rem; cursor: pointer; transition: all 0.14s; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
-  .employee-card:hover { border-color: var(--accent); background: #f5f7ff; }
-  .employee-card.selected { border-color: var(--accent); background: #eef2fd; }
-  .emp-name { font-size: 0.86rem; font-weight: 600; padding-right: 1.4rem; }
-  .emp-role { font-size: 0.74rem; color: var(--muted); margin-top: 0.1rem; }
-  .emp-badge { display: inline-block; margin-top: 0.3rem; font-size: 0.66rem; font-weight: 600; padding: 0.1rem 0.48rem; border-radius: 20px; border: 1px solid; }
-  .emp-delete { position: absolute; right: 0.55rem; top: 0.55rem; background: none; border: none; color: var(--muted); cursor: pointer; font-size: 0.82rem; opacity: 0; transition: opacity 0.14s; padding: 0.1rem 0.28rem; border-radius: 4px; }
-  .employee-card:hover .emp-delete { opacity: 1; }
-  .emp-delete:hover { color: #d05050; background: #fdd8d8; }
+.cell-0{background:var(--box-puzzle);border-color:var(--box-puzzle-b);color:var(--box-puzzle-t);}
+.cell-1{background:var(--box-future);border-color:var(--box-future-b);color:var(--box-future-t);}
+.cell-2{background:var(--box-star);border-color:var(--box-star-b);color:var(--box-star-t);}
+.cell-3{background:var(--box-growth);border-color:var(--box-growth-b);color:var(--box-growth-t);}
+.cell-4{background:var(--box-core);border-color:var(--box-core-b);color:var(--box-core-t);}
+.cell-5{background:var(--box-high);border-color:var(--box-high-b);color:var(--box-high-t);}
+.cell-6{background:var(--box-risk);border-color:var(--box-risk-b);color:var(--box-risk-t);}
+.cell-7{background:var(--box-consider);border-color:var(--box-consider-b);color:var(--box-consider-t);}
+.cell-8{background:var(--box-solid);border-color:var(--box-solid-b);color:var(--box-solid-t);}
 
-  /* Grid area */
-  .grid-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-  .grid-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; padding: 1.1rem 1.4rem 0.9rem; gap: 0.65rem; }
-  .axis-label-top { text-align: center; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-weight: 500; flex-shrink: 0; }
-  .grid-wrapper { display: flex; flex: 1; gap: 0.4rem; min-height: 0; }
-  .axis-label-left { writing-mode: vertical-rl; transform: rotate(180deg); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-weight: 500; display: flex; align-items: center; flex-shrink: 0; }
-  .grid-inner { flex: 1; display: flex; flex-direction: column; min-height: 0; }
-  .grid-and-yticks { display: flex; flex: 1; gap: 4px; min-height: 0; }
-  .y-tick-labels { display: flex; flex-direction: column; justify-content: space-around; flex-shrink: 0; width: 46px; text-align: right; padding: 4px 6px 4px 0; }
-  .y-tick-labels span { font-size: 0.65rem; color: var(--muted); }
-  .grid-container { flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); gap: 6px; min-height: 0; }
-  .x-tick-labels { display: flex; justify-content: space-around; padding: 4px 0 0 52px; flex-shrink: 0; }
-  .x-tick-labels span { font-size: 0.65rem; color: var(--muted); }
+.table-section{padding:1.5rem;border-top:2px solid var(--border);flex-shrink:0;}
+.table-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;gap:1rem;flex-wrap:wrap;}
+.table-header h2{font-family:'DM Serif Display',serif;font-size:1.4rem;}
+.table-filters{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;}
+.table-search{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:.38rem .75rem;font-family:'DM Sans',sans-serif;font-size:.88rem;color:var(--text);outline:none;width:200px;}
+.table-search:focus{border-color:var(--accent);}
+.table-filter-sel{background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:.38rem .7rem;font-family:'DM Sans',sans-serif;font-size:.88rem;cursor:pointer;outline:none;}
+.table-filter-sel.active{border-color:var(--accent);background:#eef2fd;color:var(--accent);font-weight:600;}
+table{width:100%;border-collapse:collapse;background:var(--surface);border-radius:10px;overflow:hidden;box-shadow:0 1px 8px rgba(0,0,0,.07);font-size:.9rem;}
+thead th{background:var(--surface2);padding:.75rem 1rem;text-align:left;font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);cursor:pointer;user-select:none;white-space:nowrap;}
+thead th:hover{color:var(--accent);}
+.sort-icon{margin-left:.3rem;opacity:.4;}
+thead th.sorted .sort-icon{opacity:1;color:var(--accent);}
+tbody tr{border-bottom:1px solid var(--border);}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:#f5f7ff;}
+tbody td{padding:.7rem 1rem;color:var(--text);vertical-align:middle;}
+.notes-cell{max-width:220px;font-size:.83rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.table-badge{display:inline-block;font-size:.72rem;font-weight:600;padding:.12rem .55rem;border-radius:20px;border:1px solid;white-space:nowrap;}
+.dept-pill{display:inline-block;font-size:.78rem;font-weight:600;padding:.15rem .6rem;border-radius:20px;color:#fff;}
+.dept-pill[data-dept="CD"]{background:var(--dept-cd);}
+.dept-pill[data-dept="CX"]{background:var(--dept-cx);}
+.dept-pill[data-dept="NPO"]{background:var(--dept-npo);}
+.dept-pill[data-dept=""]{background:var(--dept-def);}
+.perf-pot{font-weight:700;color:var(--accent);}
+.table-empty{text-align:center;padding:2rem;color:var(--muted);}
+.table-actions{display:flex;gap:.4rem;}
+.tbl-btn{background:none;border:1px solid var(--border);border-radius:5px;padding:.2rem .5rem;font-size:.78rem;cursor:pointer;color:var(--muted);font-family:'DM Sans',sans-serif;}
+.tbl-btn:hover{border-color:var(--accent);color:var(--accent);}
+.tbl-btn.del:hover{border-color:#d05050;color:#d05050;}
 
-  /* Grid cells */
-  .grid-cell { border-radius: 10px; border: 1px solid; padding: 0.6rem 0.7rem; display: flex; flex-direction: column; overflow: hidden; transition: all 0.15s; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
-  .grid-cell.drag-over { transform: scale(1.02); box-shadow: 0 4px 16px rgba(42,91,215,0.18); }
-  .cell-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.35rem; margin-bottom: 0.38rem; flex-shrink: 0; }
-  .cell-num { font-size: 1.1rem; line-height: 1; }
-  .cell-title { font-size: 0.64rem; font-weight: 700; letter-spacing: 0.03em; text-align: right; line-height: 1.3; }
-  .cell-chips { display: flex; flex-wrap: wrap; gap: 4px; overflow-y: auto; flex: 1; align-content: flex-start; }
+.detail-panel{width:265px;flex-shrink:0;border-left:1px solid var(--border);background:var(--surface);padding:1.4rem 1.2rem;overflow-y:auto;display:none;}
+.detail-panel.active{display:block;}
+.detail-panel h3{font-family:'DM Serif Display',serif;font-size:1.3rem;line-height:1.2;margin-bottom:.2rem;}
+.detail-role{font-size:.82rem;color:var(--muted);margin-bottom:.85rem;}
+.detail-box{padding:.5rem .8rem;border-radius:7px;border:1px solid;font-size:.8rem;font-weight:700;margin-bottom:.55rem;text-align:center;}
+.detail-desc{font-size:.78rem;color:var(--muted);line-height:1.5;margin-bottom:.9rem;}
+.detail-scores{display:grid;grid-template-columns:1fr 1fr;gap:.55rem;margin-bottom:.9rem;}
+.score-block{background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:.5rem;text-align:center;}
+.score-block .s-label{font-size:.7rem;color:var(--muted);margin-bottom:.12rem;}
+.score-block .s-val{font-family:'DM Serif Display',serif;font-size:1.6rem;color:var(--accent);line-height:1;}
+.score-block .s-sub{font-size:.68rem;color:var(--muted);}
+.detail-notes-label{font-size:.7rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:.28rem;}
+.detail-notes{font-size:.82rem;line-height:1.5;margin-bottom:.9rem;}
+.detail-actions{display:flex;gap:.45rem;}
+.detail-actions button{flex:1;font-size:.8rem;padding:.4rem;}
 
-  /* Chips */
-  .chip { font-size: 0.68rem; font-weight: 500; padding: 0.2rem 0.5rem; border-radius: 5px; background: rgba(0,0,0,0.08); border: 1px solid rgba(0,0,0,0.13); cursor: grab; user-select: none; transition: all 0.14s; white-space: nowrap; display: flex; flex-direction: column; gap: 1px; line-height: 1.3; }
-  .chip:hover { background: rgba(0,0,0,0.14); transform: translateY(-1px); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-  .chip:active { cursor: grabbing; }
-  .chip-name { font-weight: 700; }
-  .chip-meta { font-size: 0.58rem; opacity: 0.65; font-weight: 400; }
-  .chip.filtered-out { opacity: 0.13; pointer-events: none; }
-  .unassigned-note { font-size: 0.68rem; color: var(--muted); font-style: italic; opacity: 0.55; }
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(20,30,70,.4);z-index:100;align-items:center;justify-content:center;backdrop-filter:blur(3px);}
+.modal-overlay.active{display:flex;}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:2rem;width:500px;max-width:95vw;box-shadow:0 20px 60px rgba(0,0,0,.15);animation:mIn .22s ease;}
+@keyframes mIn{from{opacity:0;transform:translateY(14px) scale(.98);}to{opacity:1;transform:none;}}
+.modal h2{font-family:'DM Serif Display',serif;font-size:1.45rem;margin-bottom:1.3rem;}
+.form-group{margin-bottom:1rem;}
+.form-group label{display:block;font-size:.78rem;color:var(--muted);margin-bottom:.32rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;}
+.form-group input,.form-group textarea,.form-group select{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:7px;color:var(--text);padding:.6rem .85rem;font-family:'DM Sans',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s;}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--accent);}
+.form-group textarea{resize:vertical;min-height:65px;}
+.slider-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.slider-label{display:flex;justify-content:space-between;align-items:center;font-size:.78rem;color:var(--muted);margin-bottom:.28rem;font-weight:500;text-transform:uppercase;letter-spacing:.06em;}
+.slider-label .val{font-family:'DM Serif Display',serif;font-size:1.05rem;color:var(--accent);}
+input[type=range]{-webkit-appearance:none;width:100%;height:5px;background:var(--border);border-radius:4px;outline:none;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--accent);cursor:pointer;}
+.slider-ticks{display:flex;justify-content:space-between;font-size:.65rem;color:var(--muted);margin-top:.2rem;}
+.placement-preview{margin-top:.9rem;padding:.65rem 1rem;border-radius:8px;border:1px solid;font-size:.88rem;font-weight:600;text-align:center;}
+.modal-footer{display:flex;gap:.7rem;justify-content:flex-end;margin-top:1.3rem;}
 
-  .cell-0 { background:var(--box-puzzle);   border-color:var(--box-puzzle-b);   color:var(--box-puzzle-t);   }
-  .cell-1 { background:var(--box-future);   border-color:var(--box-future-b);   color:var(--box-future-t);   }
-  .cell-2 { background:var(--box-star);     border-color:var(--box-star-b);     color:var(--box-star-t);     }
-  .cell-3 { background:var(--box-growth);   border-color:var(--box-growth-b);   color:var(--box-growth-t);   }
-  .cell-4 { background:var(--box-core);     border-color:var(--box-core-b);     color:var(--box-core-t);     }
-  .cell-5 { background:var(--box-high);     border-color:var(--box-high-b);     color:var(--box-high-t);     }
-  .cell-6 { background:var(--box-risk);     border-color:var(--box-risk-b);     color:var(--box-risk-t);     }
-  .cell-7 { background:var(--box-consider); border-color:var(--box-consider-b); color:var(--box-consider-t); }
-  .cell-8 { background:var(--box-solid);    border-color:var(--box-solid-b);    color:var(--box-solid-t);    }
+.empty-list{display:flex;flex-direction:column;align-items:center;justify-content:center;height:120px;color:var(--muted);font-size:.85rem;gap:.35rem;}
+.empty-list .big{font-family:'DM Serif Display',serif;font-size:1.7rem;color:var(--border);}
 
-  /* Detail panel */
-  .detail-panel { width: 265px; flex-shrink: 0; border-left: 1px solid var(--border); background: var(--surface); padding: 1.4rem 1.2rem; overflow-y: auto; display: none; box-shadow: -2px 0 8px rgba(0,0,0,0.04); }
-  .detail-panel.active { display: block; }
-  .detail-panel h3 { font-family: 'DM Serif Display', serif; font-size: 1.25rem; line-height: 1.2; margin-bottom: 0.2rem; }
-  .detail-role { font-size: 0.78rem; color: var(--muted); margin-bottom: 0.85rem; }
-  .detail-box { padding: 0.5rem 0.8rem; border-radius: 7px; border: 1px solid; font-size: 0.76rem; font-weight: 700; margin-bottom: 0.55rem; text-align: center; }
-  .detail-desc { font-size: 0.74rem; color: var(--muted); line-height: 1.5; margin-bottom: 0.9rem; }
-  .detail-scores { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem; margin-bottom: 0.9rem; }
-  .score-block { background: var(--bg); border: 1px solid var(--border); border-radius: 7px; padding: 0.5rem 0.55rem; text-align: center; }
-  .score-block .s-label { font-size: 0.65rem; color: var(--muted); margin-bottom: 0.12rem; }
-  .score-block .s-val { font-family: 'DM Serif Display', serif; font-size: 1.55rem; color: var(--accent); line-height: 1; }
-  .score-block .s-sub { font-size: 0.63rem; color: var(--muted); }
-  .detail-notes-label { font-size: 0.66rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.28rem; }
-  .detail-notes { font-size: 0.78rem; line-height: 1.5; margin-bottom: 0.9rem; }
-  .detail-actions { display: flex; gap: 0.45rem; }
-  .detail-actions button { flex: 1; font-size: 0.76rem; padding: 0.38rem 0.45rem; }
-
-  /* Modal */
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(20,30,70,0.38); z-index: 100; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
-  .modal-overlay.active { display: flex; }
-  .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 2rem; width: 500px; max-width: 95vw; box-shadow: 0 20px 60px rgba(0,0,0,0.14); animation: modalIn 0.22s ease; }
-  @keyframes modalIn { from { opacity:0; transform:translateY(14px) scale(0.98); } to { opacity:1; transform:translateY(0) scale(1); } }
-  .modal h2 { font-family: 'DM Serif Display', serif; font-size: 1.4rem; margin-bottom: 1.3rem; }
-  .form-group { margin-bottom: 0.95rem; }
-  .form-group label { display: block; font-size: 0.73rem; color: var(--muted); margin-bottom: 0.32rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; }
-  .form-group input, .form-group textarea, .form-group select { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 7px; color: var(--text); padding: 0.58rem 0.82rem; font-family: 'DM Sans', sans-serif; font-size: 0.86rem; transition: border-color 0.2s; outline: none; }
-  .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--accent); }
-  .form-group textarea { resize: vertical; min-height: 62px; }
-  .slider-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-  .slider-label { display: flex; justify-content: space-between; align-items: center; font-size: 0.73rem; color: var(--muted); margin-bottom: 0.28rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; }
-  .slider-label .val { font-family: 'DM Serif Display', serif; font-size: 1rem; color: var(--accent); }
-  input[type=range] { -webkit-appearance: none; width: 100%; height: 4px; background: var(--border); border-radius: 4px; outline: none; }
-  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--accent); cursor: pointer; transition: transform 0.15s; }
-  input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
-  .slider-ticks { display: flex; justify-content: space-between; font-size: 0.6rem; color: var(--muted); margin-top: 0.18rem; }
-  .placement-preview { margin-top: 0.85rem; padding: 0.6rem 1rem; border-radius: 8px; border: 1px solid; font-size: 0.82rem; font-weight: 600; text-align: center; }
-  .modal-footer { display: flex; gap: 0.65rem; justify-content: flex-end; margin-top: 1.3rem; }
-
-  .empty-list { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 120px; color: var(--muted); font-size: 0.8rem; gap: 0.35rem; }
-  .empty-list .big { font-family: 'DM Serif Display', serif; font-size: 1.7rem; color: var(--border); }
-
-  @media (max-width: 900px) {
-    .sidebar { width: 210px; }
-    .detail-panel { display: none !important; }
-    header { padding: 1rem 1.2rem; }
-    .grid-content { padding: 0.7rem; }
-  }
+@media(max-width:960px){.sidebar{width:220px;}.detail-panel{display:none!important;}}
 </style>
 </head>
 <body>
 <div class="app">
-
-  <!-- Header -->
   <header>
     <div class="header-title">
       <h1>9-Box <span>Grid</span></h1>
       <p>Talentmanagement &amp; Mitarbeiterbeurteilung</p>
     </div>
     <div class="header-right">
-      <span id="syncStatus" class="sync-connecting">⟳ Verbinde…</span>
-      <button class="btn btn-ghost" onclick="exportJSON()">↓ Export</button>
-      <button class="btn btn-ghost" onclick="importClick()">↑ Import</button>
-      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importJSON(event)">
-      <button class="btn btn-primary" onclick="openModal()">+ Mitarbeiter</button>
+      <span id="syncStatus" class="sync-local">◉ Lokal</span>
+      <button class="btn btn-ghost" id="btnExport">↓ Export</button>
+      <button class="btn btn-ghost" id="btnImport">↑ Import</button>
+      <input type="file" id="importFile" accept=".json" style="display:none">
+      <button class="btn btn-primary" id="btnNew">+ Mitarbeiter</button>
     </div>
   </header>
 
-  <!-- Stats -->
   <div class="stats-bar">
     <div class="stat"><div class="stat-val" id="stat-total">0</div><div class="stat-label">Gesamt</div></div>
     <div class="stat"><div class="stat-val" id="stat-stars">0</div><div class="stat-label">Stars ⭐</div></div>
@@ -213,71 +215,102 @@
     <div class="stat"><div class="stat-val" id="stat-avg-pot">–</div><div class="stat-label">⌀ Potenzial</div></div>
   </div>
 
-  <!-- Filters -->
   <div class="filter-bar">
     <span class="f-label">Filter:</span>
-    <span class="f-label" style="font-weight:400;text-transform:none;letter-spacing:0;">Rolle</span>
-    <select class="filter-select" id="filterRole" onchange="applyFilters()">
+    <span class="f-label" style="font-weight:400">Rolle</span>
+    <select class="filter-select" id="filterRole">
       <option value="">Alle Rollen</option>
-      <option value="DEV">DEV</option>
-      <option value="DEV & PPE">DEV & PPE</option>
-      <option value="PM">PM</option>
-      <option value="PPE">PPE</option>
-      <option value="SA">SA</option>
-      <option value="BU Lead">BU Lead</option>
+      <option>DEV</option><option value="DEV & PPE">DEV &amp; PPE</option>
+      <option>PM</option><option>PPE</option><option>SA</option><option value="BU Lead">BU Lead</option>
     </select>
     <div class="filter-divider"></div>
-    <span class="f-label" style="font-weight:400;text-transform:none;letter-spacing:0;">Abteilung</span>
-    <select class="filter-select" id="filterDept" onchange="applyFilters()">
+    <span class="f-label" style="font-weight:400">Abteilung</span>
+    <select class="filter-select" id="filterDept">
       <option value="">Alle Abteilungen</option>
-      <option>CD</option>
-      <option>CX</option>
-      <option>NPO</option>
+      <option>CD</option><option>CX</option><option>NPO</option>
     </select>
-    <button class="filter-clear" onclick="clearFilters()">✕ Zurücksetzen</button>
+    <button class="filter-clear" id="btnClearGrid">✕ Zurücksetzen</button>
+    <div class="dept-legend">
+      <div class="dept-legend-item"><div class="dept-dot" style="background:var(--dept-cd)"></div>CD</div>
+      <div class="dept-legend-item"><div class="dept-dot" style="background:var(--dept-cx)"></div>CX</div>
+      <div class="dept-legend-item"><div class="dept-dot" style="background:var(--dept-npo)"></div>NPO</div>
+    </div>
   </div>
 
   <div class="main">
-
-    <!-- Sidebar -->
     <div class="sidebar">
       <div class="sidebar-header">
         <h3>Mitarbeiter</h3>
-        <button class="btn-add" onclick="openModal()">＋ Neu</button>
+        <button class="btn-add" id="btnNew2">＋ Neu</button>
       </div>
-      <div class="employee-list" id="employeeList">
-        <div class="empty-list"><div class="big">∅</div><span>Noch keine Mitarbeiter</span></div>
-      </div>
+      <div class="employee-list" id="employeeList"></div>
     </div>
 
-    <!-- Grid -->
     <div class="grid-area">
-      <div class="grid-content">
-        <div class="axis-label-top">← Leistung →</div>
-        <div class="grid-wrapper">
-          <div class="axis-label-left">↑ Potenzial ↑</div>
-          <div class="grid-inner">
-            <div class="grid-and-yticks">
-              <div class="y-tick-labels">
-                <span>Hoch</span>
-                <span>Mittel</span>
-                <span>Niedrig</span>
+      <div class="grid-scroll">
+        <div class="grid-section">
+          <div class="axis-label-top">← Leistung →</div>
+          <div class="grid-wrapper">
+            <div class="axis-label-left">↑ Potenzial ↑</div>
+            <div class="grid-inner">
+              <div class="grid-and-yticks">
+                <div class="y-tick-labels">
+                  <span>Hoch</span><span>Mittel</span><span>Niedrig</span>
+                </div>
+                <div class="grid-container" id="nineBoxGrid"></div>
               </div>
-              <div class="grid-container" id="nineBoxGrid"></div>
-            </div>
-            <div class="x-tick-labels">
-              <span>Niedrig</span><span>Mittel</span><span>Hoch</span>
+              <div class="x-tick-labels">
+                <span>Niedrig</span><span>Mittel</span><span>Hoch</span>
+              </div>
             </div>
           </div>
+        </div>
+
+        <div class="table-section">
+          <div class="table-header">
+            <h2>Alle Mitarbeiter</h2>
+            <div class="table-filters">
+              <input type="text" class="table-search" id="tblSearch" placeholder="🔍 Name suchen…">
+              <select class="table-filter-sel" id="tblRole">
+                <option value="">Alle Rollen</option>
+                <option>DEV</option><option value="DEV & PPE">DEV &amp; PPE</option>
+                <option>PM</option><option>PPE</option><option>SA</option><option value="BU Lead">BU Lead</option>
+              </select>
+              <select class="table-filter-sel" id="tblDept">
+                <option value="">Alle Abteilungen</option>
+                <option>CD</option><option>CX</option><option>NPO</option>
+              </select>
+              <select class="table-filter-sel" id="tblPerf">
+                <option value="">Alle Leistungen</option>
+                <option value="1">Niedrig (1)</option><option value="2">Mittel (2)</option><option value="3">Hoch (3)</option>
+              </select>
+              <select class="table-filter-sel" id="tblPot">
+                <option value="">Alle Potenziale</option>
+                <option value="1">Niedrig (1)</option><option value="2">Mittel (2)</option><option value="3">Hoch (3)</option>
+              </select>
+              <button class="filter-clear" id="btnClearTable">✕ Zurücksetzen</button>
+            </div>
+          </div>
+          <table>
+            <thead><tr>
+              <th data-col="name">Vorname / Name <span class="sort-icon">↕</span></th>
+              <th data-col="role">Position <span class="sort-icon">↕</span></th>
+              <th data-col="dept">Abteilung <span class="sort-icon">↕</span></th>
+              <th data-col="perf">Leistung <span class="sort-icon">↕</span></th>
+              <th data-col="pot">Potenzial <span class="sort-icon">↕</span></th>
+              <th data-col="box">Einordnung <span class="sort-icon">↕</span></th>
+              <th>Notizen</th>
+              <th></th>
+            </tr></thead>
+            <tbody id="empTableBody"></tbody>
+          </table>
         </div>
       </div>
     </div>
 
-    <!-- Detail panel -->
     <div class="detail-panel" id="detailPanel">
       <div id="detailContent"></div>
     </div>
-
   </div>
 </div>
 
@@ -289,380 +322,465 @@
       <label>Name</label>
       <input type="text" id="empName" placeholder="Vor- und Nachname">
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.7rem">
       <div class="form-group">
         <label>Position / Rolle</label>
         <select id="empRole">
           <option value="">– bitte wählen –</option>
-          <option value="DEV">DEV</option>
-          <option value="DEV & PPE">DEV & PPE</option>
-          <option value="PM">PM</option>
-          <option value="PPE">PPE</option>
-          <option value="SA">SA</option>
-          <option value="BU Lead">BU Lead</option>
+          <option>DEV</option><option value="DEV & PPE">DEV &amp; PPE</option>
+          <option>PM</option><option>PPE</option><option>SA</option><option value="BU Lead">BU Lead</option>
         </select>
       </div>
       <div class="form-group">
         <label>Abteilung</label>
         <select id="empDept">
           <option value="">– bitte wählen –</option>
-          <option>CD</option>
-          <option>CX</option>
-          <option>NPO</option>
+          <option>CD</option><option>CX</option><option>NPO</option>
         </select>
       </div>
     </div>
     <div class="slider-row">
       <div>
         <div class="slider-label"><span>Leistung</span><span class="val" id="perfVal">2</span></div>
-        <input type="range" min="1" max="3" value="2" id="perfSlider" oninput="updateSliders()">
+        <input type="range" min="1" max="3" value="2" id="perfSlider">
         <div class="slider-ticks"><span>Niedrig</span><span>Mittel</span><span>Hoch</span></div>
       </div>
       <div>
         <div class="slider-label"><span>Potenzial</span><span class="val" id="potVal">2</span></div>
-        <input type="range" min="1" max="3" value="2" id="potSlider" oninput="updateSliders()">
+        <input type="range" min="1" max="3" value="2" id="potSlider">
         <div class="slider-ticks"><span>Niedrig</span><span>Mittel</span><span>Hoch</span></div>
       </div>
     </div>
     <div class="placement-preview" id="placementPreview"></div>
-    <div class="form-group" style="margin-top:0.9rem;">
+    <div class="form-group" style="margin-top:.9rem">
       <label>Notizen</label>
       <textarea id="empNotes" placeholder="Stärken, Entwicklungsfelder, Massnahmen…"></textarea>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal()">Abbrechen</button>
-      <button class="btn btn-primary" onclick="saveEmployee()">Speichern</button>
+      <button class="btn btn-ghost" id="btnCancel">Abbrechen</button>
+      <button class="btn btn-primary" id="btnSave">Speichern</button>
     </div>
   </div>
 </div>
 
-<!-- Firebase Compat SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script>
-// ── Box definitions ───────────────────────────────────────────────────────────
-const BOX_DEFS = [
-  { title:"Rätsel",              emoji:"❓", desc:"Hohes Potenzial, aber niedrige Leistung. Ursachen klären, gezielt fördern oder Aufgaben anpassen." },
-  { title:"Zukunftsträger",      emoji:"🌱", desc:"Hohes Potenzial, mittlere Leistung. Gezielt entwickeln – diese Person wächst in Führungsrollen." },
-  { title:"Star",                emoji:"⭐", desc:"Hohes Potenzial & exzellente Leistung. Schlüsselpersonen – binden, fördern, Nachfolge planen." },
-  { title:"Entwicklungsfall",    emoji:"📈", desc:"Mittleres Potenzial, niedrige Leistung. Coaching und klare Erwartungen setzen." },
-  { title:"Kernmitarbeiter",     emoji:"🔑", desc:"Mittleres Potenzial, solide Leistung. Basis des Teams – wertschätzen und stabilisieren." },
-  { title:"High Performer",      emoji:"🚀", desc:"Mittleres Potenzial, hohe Leistung. Experten – im Fachbereich fördern und Motivation erhalten." },
-  { title:"Risiko",              emoji:"⚠️", desc:"Niedriges Potenzial & niedrige Leistung. Klärungsgespräch nötig – Trennung erwägen." },
-  { title:"Bedenkenfall",        emoji:"🤔", desc:"Niedriges Potenzial, mittlere Leistung. Beobachten, evtl. Aufgabenbereich anpassen." },
-  { title:"Solider Mitarbeiter", emoji:"✅", desc:"Niedriges Potenzial, hohe Leistung. Verlässlich und wertvoll – anerkennen, nicht überlasten." },
+// ═══════════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════════
+const DEFS = [
+  {title:"Rätsel",             emoji:"❓",desc:"Hohes Potenzial, aber niedrige Leistung. Ursachen klären, gezielt fördern oder Aufgaben anpassen."},
+  {title:"Zukunftsträger",     emoji:"🌱",desc:"Hohes Potenzial, mittlere Leistung. Gezielt entwickeln – diese Person wächst in Führungsrollen."},
+  {title:"Star",               emoji:"⭐",desc:"Hohes Potenzial & exzellente Leistung. Schlüsselpersonen – binden, fördern, Nachfolge planen."},
+  {title:"Entwicklungsfall",   emoji:"📈",desc:"Mittleres Potenzial, niedrige Leistung. Coaching und klare Erwartungen setzen."},
+  {title:"Kernmitarbeiter",    emoji:"🔑",desc:"Mittleres Potenzial, solide Leistung. Basis des Teams – wertschätzen und stabilisieren."},
+  {title:"High Performer",     emoji:"🚀",desc:"Mittleres Potenzial, hohe Leistung. Experten – im Fachbereich fördern und Motivation erhalten."},
+  {title:"Risiko",             emoji:"⚠️",desc:"Niedriges Potenzial & niedrige Leistung. Klärungsgespräch nötig – Trennung erwägen."},
+  {title:"Bedenkenfall",       emoji:"🤔",desc:"Niedriges Potenzial, mittlere Leistung. Beobachten, evtl. Aufgabenbereich anpassen."},
+  {title:"Solider Mitarbeiter",emoji:"✅",desc:"Niedriges Potenzial, hohe Leistung. Verlässlich und wertvoll – anerkennen, nicht überlasten."},
 ];
-const BOX_COLORS = [
-  {bg:'var(--box-puzzle)',   border:'var(--box-puzzle-b)',   text:'var(--box-puzzle-t)'},
-  {bg:'var(--box-future)',   border:'var(--box-future-b)',   text:'var(--box-future-t)'},
-  {bg:'var(--box-star)',     border:'var(--box-star-b)',     text:'var(--box-star-t)'},
-  {bg:'var(--box-growth)',   border:'var(--box-growth-b)',   text:'var(--box-growth-t)'},
-  {bg:'var(--box-core)',     border:'var(--box-core-b)',     text:'var(--box-core-t)'},
-  {bg:'var(--box-high)',     border:'var(--box-high-b)',     text:'var(--box-high-t)'},
-  {bg:'var(--box-risk)',     border:'var(--box-risk-b)',     text:'var(--box-risk-t)'},
-  {bg:'var(--box-consider)', border:'var(--box-consider-b)', text:'var(--box-consider-t)'},
-  {bg:'var(--box-solid)',    border:'var(--box-solid-b)',    text:'var(--box-solid-t)'},
+const COLORS = [
+  {bg:'var(--box-puzzle)',  b:'var(--box-puzzle-b)',  t:'var(--box-puzzle-t)'},
+  {bg:'var(--box-future)',  b:'var(--box-future-b)',  t:'var(--box-future-t)'},
+  {bg:'var(--box-star)',    b:'var(--box-star-b)',    t:'var(--box-star-t)'},
+  {bg:'var(--box-growth)',  b:'var(--box-growth-b)',  t:'var(--box-growth-t)'},
+  {bg:'var(--box-core)',    b:'var(--box-core-b)',    t:'var(--box-core-t)'},
+  {bg:'var(--box-high)',    b:'var(--box-high-b)',    t:'var(--box-high-t)'},
+  {bg:'var(--box-risk)',    b:'var(--box-risk-b)',    t:'var(--box-risk-t)'},
+  {bg:'var(--box-consider)',b:'var(--box-consider-b)',t:'var(--box-consider-t)'},
+  {bg:'var(--box-solid)',   b:'var(--box-solid-b)',   t:'var(--box-solid-t)'},
 ];
+const LBL = ['','Niedrig','Mittel','Hoch'];
+const LS_KEY = '9box-employees';
 
-// ── Firebase ──────────────────────────────────────────────────────────────────
-if (location.protocol === 'file:') {
-  document.getElementById('syncStatus').textContent = '⚠ Bitte über Server öffnen';
-  document.getElementById('syncStatus').className = 'sync-error';
-  alert('⚠️ Hinweis: Firebase funktioniert nicht, wenn die Datei direkt als file:// geöffnet wird.\n\nBitte einen dieser Wege nutzen:\n\n1. VS Code → Rechtsklick → "Open with Live Server"\n2. Datei auf einen Webserver hochladen\n3. In Chrome: chrome.exe --allow-file-access-from-files');
-}
-const firebaseConfig = {
-  apiKey:            "AIzaSyBRczuB85sUsrYsgXbvvVVm9tJIwdCxMcA",
-  authDomain:        "box-grid-beee8.firebaseapp.com",
-  databaseURL:       "https://box-grid-beee8-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId:         "box-grid-beee8",
-  storageBucket:     "box-grid-beee8.firebasestorage.app",
-  messagingSenderId: "806969453568",
-  appId:             "1:806969453568:web:f5bb3ad5058030df497ce5"
-};
-
-firebase.initializeApp(firebaseConfig);
-const db     = firebase.database();
-const empRef = db.ref('employees');
-
-// ── State ─────────────────────────────────────────────────────────────────────
-let employees  = [];
+let employees  = JSON.parse(localStorage.getItem(LS_KEY) || '[]');
 let selectedId = null;
 let editingId  = null;
+let sortCol    = 'name';
+let sortDir    = 1;
+let fbEnabled  = false;
 
-// ── Sync indicator ────────────────────────────────────────────────────────────
-function syncStatus(state) {
-  const el  = document.getElementById('syncStatus');
-  const map = {
+// ═══════════════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════════════
+const $ = id => document.getElementById(id);
+const boxIdx = (perf,pot) => (3-pot)*3+(perf-1);
+
+function setSyncStatus(s) {
+  const el = $('syncStatus');
+  const m = {
+    local:      ['◉ Lokal',        'sync-local'],
     connecting: ['⟳ Verbinde…',   'sync-connecting'],
-    live:       ['● Live',        'sync-live'],
+    live:       ['● Firebase Live', 'sync-live'],
     saving:     ['⟳ Speichert…',  'sync-saving'],
-    ok:         ['✓ Gespeichert', 'sync-ok'],
-    error:      ['✕ Fehler',      'sync-error'],
+    ok:         ['✓ Gespeichert',  'sync-ok'],
+    error:      ['✕ Firebase Fehler','sync-error'],
   };
-  const [txt, cls] = map[state] || map.live;
-  el.textContent = txt;
-  el.className   = cls;
-  if (state === 'ok') setTimeout(() => syncStatus('live'), 1500);
+  const [txt,cls] = m[s] || m.local;
+  el.textContent = txt; el.className = cls;
+  if (s==='ok') setTimeout(()=>setSyncStatus(fbEnabled?'live':'local'), 1500);
 }
 
-// ── Real-time listener (this is the heart of the collaboration) ───────────────
-empRef.on('value', snapshot => {
-  const data = snapshot.val();
-  employees  = data ? Object.values(data) : [];
-  syncStatus('live');
-  render();
-  if (selectedId) renderDetail(selectedId);
-}, err => {
-  console.error(err);
-  syncStatus('error');
-});
-
-// ── Save to Firebase ──────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+// SAVE  (localStorage always, Firebase if available)
+// ═══════════════════════════════════════════════════════════════
 function save() {
-  syncStatus('saving');
-  const obj = {};
-  employees.forEach(e => { obj[e.id] = e; });
-  empRef.set(obj)
-    .then(() => syncStatus('ok'))
-    .catch(err => { console.error(err); syncStatus('error'); });
+  localStorage.setItem(LS_KEY, JSON.stringify(employees));
+  if (fbEnabled && window._fbSet) {
+    setSyncStatus('saving');
+    const obj = {}; employees.forEach(e => { obj[e.id] = e; });
+    window._fbSet(obj).then(()=>setSyncStatus('ok')).catch(()=>setSyncStatus('error'));
+  }
+  render();
 }
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
-function getBoxIndex(perf, pot) { return (3 - pot) * 3 + (perf - 1); }
-
-// ── Render ────────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════════════
 function render() {
   renderGrid();
   renderList();
   renderStats();
-  const r = document.getElementById('filterRole')?.value;
-  const d = document.getElementById('filterDept')?.value;
-  if (r || d) applyFilters();
+  renderTable();
+  applyGridFilter();
 }
 
 function renderGrid() {
-  const grid = document.getElementById('nineBoxGrid');
+  const grid = $('nineBoxGrid');
   grid.innerHTML = '';
   for (let i = 0; i < 9; i++) {
-    const def  = BOX_DEFS[i];
+    const def  = DEFS[i];
     const emps = employees.filter(e => e.boxIndex === i);
     const cell = document.createElement('div');
-    cell.className = `grid-cell cell-${i}`;
-    cell.dataset.index = i;
-    cell.innerHTML = `
-      <div class="cell-header">
-        <span class="cell-num">${def.emoji}</span>
-        <span class="cell-title">${def.title}</span>
-      </div>
-      <div class="cell-chips" id="chips-${i}">
-        ${emps.map(e => {
-          const meta = [e.role, e.dept].filter(Boolean).join(' · ');
-          return `<div class="chip" draggable="true"
-            data-id="${e.id}" data-role="${e.role||''}" data-dept="${e.dept||''}"
-            ondragstart="dragStart(event)" onclick="selectEmployee('${e.id}',event)"
-            title="${e.name}${meta?' — '+meta:''}">
-            <span class="chip-name">${e.name.split(' ')[0]}</span>
-            ${meta?`<span class="chip-meta">${meta}</span>`:''}
-          </div>`;
-        }).join('')}
-        ${emps.length===0?`<span class="unassigned-note">leer</span>`:''}
-      </div>`;
+    cell.className = 'grid-cell cell-' + i;
+
+    const chipsHtml = emps.map(e => {
+      const meta = [e.role, e.dept].filter(Boolean).join(' · ');
+      return '<div class="chip" draggable="true" data-id="' + e.id + '" data-role="' + (e.role||'') + '" data-dept="' + (e.dept||'') + '">' +
+        '<span class="chip-name">' + e.name + '</span>' +
+        (meta ? '<span class="chip-meta">' + meta + '</span>' : '') +
+        '</div>';
+    }).join('');
+
+    cell.innerHTML =
+      '<div class="cell-header">' +
+        '<span class="cell-num">' + def.emoji + '</span>' +
+        '<span class="cell-title">' + def.title + '</span>' +
+      '</div>' +
+      '<div class="cell-chips">' +
+        (chipsHtml || '<span class="unassigned-note">leer</span>') +
+      '</div>';
+
+    cell.querySelectorAll('.chip').forEach(chip => {
+      chip.addEventListener('dragstart', ev => ev.dataTransfer.setData('text/plain', chip.dataset.id));
+      chip.addEventListener('click', ev => { ev.stopPropagation(); selectEmployee(chip.dataset.id); });
+    });
     cell.addEventListener('dragover',  ev => { ev.preventDefault(); cell.classList.add('drag-over'); });
     cell.addEventListener('dragleave', ()  => cell.classList.remove('drag-over'));
-    cell.addEventListener('drop',      ev  => {
+    cell.addEventListener('drop', ev => {
       ev.preventDefault(); cell.classList.remove('drag-over');
-      const id  = ev.dataTransfer.getData('text/plain');
-      const emp = employees.find(x => x.id === id);
+      const emp = employees.find(x => x.id === ev.dataTransfer.getData('text/plain'));
       if (!emp) return;
-      emp.boxIndex = i;
-      emp.pot  = 3 - Math.floor(i / 3);
-      emp.perf = (i % 3) + 1;
+      emp.boxIndex = i; emp.pot = 3 - Math.floor(i/3); emp.perf = (i%3)+1;
       save();
-      if (selectedId === id) renderDetail(id);
+      if (selectedId === emp.id) renderDetail(emp.id);
     });
     grid.appendChild(cell);
   }
 }
 
 function renderList() {
-  const list = document.getElementById('employeeList');
+  const list = $('employeeList');
   if (!employees.length) {
-    list.innerHTML = `<div class="empty-list"><div class="big">∅</div><span>Noch keine Mitarbeiter</span></div>`;
+    list.innerHTML = '<div class="empty-list"><div class="big">∅</div><span>Noch keine Mitarbeiter</span></div>';
     return;
   }
   list.innerHTML = employees.map(e => {
-    const c   = BOX_COLORS[e.boxIndex];
-    const def = BOX_DEFS[e.boxIndex];
-    return `<div class="employee-card ${selectedId===e.id?'selected':''}" onclick="selectEmployee('${e.id}')">
-      <button class="emp-delete" onclick="deleteEmployee('${e.id}',event)" title="Löschen">✕</button>
-      <div class="emp-name">${e.name}</div>
-      <div class="emp-role">${[e.role,e.dept].filter(Boolean).join(' · ')||'–'}</div>
-      <div class="emp-badge" style="background:${c.bg};border-color:${c.border};color:${c.text};">${def.emoji} ${def.title}</div>
-    </div>`;
+    const c = COLORS[e.boxIndex], d = DEFS[e.boxIndex];
+    return '<div class="employee-card' + (selectedId===e.id?' selected':'') + '" data-id="' + e.id + '">' +
+      '<button class="emp-delete" data-del="' + e.id + '">✕</button>' +
+      '<div class="emp-name">' + e.name + '</div>' +
+      '<div class="emp-role">' + ([e.role,e.dept].filter(Boolean).join(' · ')||'–') + '</div>' +
+      '<div class="emp-badge" style="background:' + c.bg + ';border-color:' + c.b + ';color:' + c.t + '">' + d.emoji + ' ' + d.title + '</div>' +
+    '</div>';
   }).join('');
+  list.querySelectorAll('.employee-card').forEach(el =>
+    el.addEventListener('click', () => selectEmployee(el.dataset.id)));
+  list.querySelectorAll('[data-del]').forEach(btn =>
+    btn.addEventListener('click', ev => { ev.stopPropagation(); deleteEmployee(btn.dataset.del); }));
 }
 
 function renderStats() {
   const n = employees.length;
-  document.getElementById('stat-total').textContent     = n;
-  document.getElementById('stat-stars').textContent     = employees.filter(e=>e.boxIndex===2).length;
-  document.getElementById('stat-risk').textContent      = employees.filter(e=>e.boxIndex===6).length;
-  document.getElementById('stat-avg-perf').textContent  = n ? (employees.reduce((a,b)=>a+b.perf,0)/n).toFixed(1) : '–';
-  document.getElementById('stat-avg-pot').textContent   = n ? (employees.reduce((a,b)=>a+b.pot, 0)/n).toFixed(1) : '–';
+  $('stat-total').textContent    = n;
+  $('stat-stars').textContent    = employees.filter(e=>e.boxIndex===2).length;
+  $('stat-risk').textContent     = employees.filter(e=>e.boxIndex===6).length;
+  $('stat-avg-perf').textContent = n ? (employees.reduce((a,b)=>a+b.perf,0)/n).toFixed(1) : '–';
+  $('stat-avg-pot').textContent  = n ? (employees.reduce((a,b)=>a+b.pot,0)/n).toFixed(1) : '–';
 }
 
-// ── Detail ────────────────────────────────────────────────────────────────────
-function selectEmployee(id, ev) {
-  if (ev) ev.stopPropagation();
+function renderTable() {
+  const search = ($('tblSearch').value||'').toLowerCase();
+  const role   = $('tblRole').value;
+  const dept   = $('tblDept').value;
+  const perf   = $('tblPerf').value;
+  const pot    = $('tblPot').value;
+  ['tblRole','tblDept','tblPerf','tblPot'].forEach(id => {
+    const el = $(id); el.classList.toggle('active', !!el.value);
+  });
+  let rows = employees.filter(e => {
+    if (search && !e.name.toLowerCase().includes(search)) return false;
+    if (role && e.role !== role) return false;
+    if (dept && e.dept !== dept) return false;
+    if (perf && e.perf !== +perf) return false;
+    if (pot  && e.pot  !== +pot)  return false;
+    return true;
+  });
+  rows.sort((a,b) => {
+    let av, bv;
+    if      (sortCol==='name') { av=a.name||''; bv=b.name||''; }
+    else if (sortCol==='role') { av=a.role||''; bv=b.role||''; }
+    else if (sortCol==='dept') { av=a.dept||''; bv=b.dept||''; }
+    else if (sortCol==='perf') { av=a.perf; bv=b.perf; }
+    else if (sortCol==='pot')  { av=a.pot;  bv=b.pot; }
+    else if (sortCol==='box')  { av=DEFS[a.boxIndex].title; bv=DEFS[b.boxIndex].title; }
+    else { av=''; bv=''; }
+    return av<bv ? -sortDir : av>bv ? sortDir : 0;
+  });
+  const tbody = $('empTableBody');
+  if (!rows.length) {
+    tbody.innerHTML = '<tr><td colspan="8" class="table-empty">Keine Mitarbeiter gefunden</td></tr>';
+    return;
+  }
+  tbody.innerHTML = rows.map(e => {
+    const d=DEFS[e.boxIndex], c=COLORS[e.boxIndex];
+    return '<tr>' +
+      '<td><strong>' + e.name + '</strong></td>' +
+      '<td>' + (e.role||'–') + '</td>' +
+      '<td>' + (e.dept ? '<span class="dept-pill" data-dept="' + e.dept + '">' + e.dept + '</span>' : '–') + '</td>' +
+      '<td><span class="perf-pot">' + e.perf + '</span> <span style="color:var(--muted);font-size:.82rem">' + LBL[e.perf] + '</span></td>' +
+      '<td><span class="perf-pot">' + e.pot  + '</span> <span style="color:var(--muted);font-size:.82rem">' + LBL[e.pot]  + '</span></td>' +
+      '<td><span class="table-badge" style="background:' + c.bg + ';border-color:' + c.b + ';color:' + c.t + '">' + d.emoji + ' ' + d.title + '</span></td>' +
+      '<td class="notes-cell" title="' + (e.notes||'') + '">' + (e.notes||'–') + '</td>' +
+      '<td><div class="table-actions">' +
+        '<button class="tbl-btn" data-edit="' + e.id + '">✏ Edit</button>' +
+        '<button class="tbl-btn del" data-del="' + e.id + '">✕</button>' +
+      '</div></td>' +
+    '</tr>';
+  }).join('');
+  tbody.querySelectorAll('[data-edit]').forEach(btn => btn.addEventListener('click', () => openModal(btn.dataset.edit)));
+  tbody.querySelectorAll('[data-del]').forEach(btn  => btn.addEventListener('click', () => deleteEmployee(btn.dataset.del)));
+}
+
+function applyGridFilter() {
+  const role = $('filterRole').value;
+  const dept = $('filterDept').value;
+  $('filterRole').classList.toggle('active', !!role);
+  $('filterDept').classList.toggle('active', !!dept);
+  document.querySelectorAll('.chip').forEach(chip => {
+    const ok = (!role || chip.dataset.role === role) && (!dept || chip.dataset.dept === dept);
+    chip.classList.toggle('filtered-out', !ok);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// DETAIL PANEL
+// ═══════════════════════════════════════════════════════════════
+function selectEmployee(id) {
   selectedId = id;
   renderList();
   renderDetail(id);
 }
 
 function renderDetail(id) {
-  const panel   = document.getElementById('detailPanel');
-  const content = document.getElementById('detailContent');
+  const panel = $('detailPanel'), content = $('detailContent');
   const emp = employees.find(e => e.id === id);
   if (!emp) { panel.classList.remove('active'); return; }
   panel.classList.add('active');
-  const def = BOX_DEFS[emp.boxIndex];
-  const c   = BOX_COLORS[emp.boxIndex];
-  const lbl = ['','Niedrig','Mittel','Hoch'];
-  content.innerHTML = `
-    <h3>${emp.name}</h3>
-    <div class="detail-role">${[emp.role,emp.dept].filter(Boolean).join(' · ')||'–'}</div>
-    <div class="detail-box" style="background:${c.bg};border-color:${c.border};color:${c.text};">${def.emoji} ${def.title}</div>
-    <div class="detail-desc">${def.desc}</div>
-    <div class="detail-scores">
-      <div class="score-block"><div class="s-label">Leistung</div><div class="s-val">${emp.perf}</div><div class="s-sub">${lbl[emp.perf]}</div></div>
-      <div class="score-block"><div class="s-label">Potenzial</div><div class="s-val">${emp.pot}</div><div class="s-sub">${lbl[emp.pot]}</div></div>
-    </div>
-    ${emp.notes?`<div class="detail-notes-label">Notizen</div><div class="detail-notes">${emp.notes}</div>`:''}
-    <div class="detail-actions">
-      <button class="btn btn-ghost" onclick="openModal('${emp.id}')">✏ Bearbeiten</button>
-      <button class="btn btn-ghost" onclick="deleteEmployee('${emp.id}')">✕ Löschen</button>
-    </div>`;
+  const d = DEFS[emp.boxIndex], c = COLORS[emp.boxIndex];
+  content.innerHTML =
+    '<h3>' + emp.name + '</h3>' +
+    '<div class="detail-role">' + ([emp.role,emp.dept].filter(Boolean).join(' · ')||'–') + '</div>' +
+    '<div class="detail-box" style="background:' + c.bg + ';border-color:' + c.b + ';color:' + c.t + '">' + d.emoji + ' ' + d.title + '</div>' +
+    '<div class="detail-desc">' + d.desc + '</div>' +
+    '<div class="detail-scores">' +
+      '<div class="score-block"><div class="s-label">Leistung</div><div class="s-val">' + emp.perf + '</div><div class="s-sub">' + LBL[emp.perf] + '</div></div>' +
+      '<div class="score-block"><div class="s-label">Potenzial</div><div class="s-val">' + emp.pot + '</div><div class="s-sub">' + LBL[emp.pot] + '</div></div>' +
+    '</div>' +
+    (emp.notes ? '<div class="detail-notes-label">Notizen</div><div class="detail-notes">' + emp.notes + '</div>' : '') +
+    '<div class="detail-actions">' +
+      '<button class="btn btn-ghost" id="dEdit">✏ Bearbeiten</button>' +
+      '<button class="btn btn-ghost" id="dDel">✕ Löschen</button>' +
+    '</div>';
+  $('dEdit').onclick = () => openModal(emp.id);
+  $('dDel').onclick  = () => deleteEmployee(emp.id);
 }
 
-// ── Modal ─────────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+// MODAL
+// ═══════════════════════════════════════════════════════════════
 function openModal(id) {
   editingId = id || null;
-  document.getElementById('modalTitle').textContent = id ? 'Mitarbeiter bearbeiten' : 'Mitarbeiter hinzufügen';
+  $('modalTitle').textContent = id ? 'Mitarbeiter bearbeiten' : 'Mitarbeiter hinzufügen';
   if (id) {
     const e = employees.find(x => x.id === id);
-    document.getElementById('empName').value    = e.name;
-    document.getElementById('empRole').value    = e.role  || '';
-    document.getElementById('empDept').value    = e.dept  || '';
-    document.getElementById('perfSlider').value = e.perf;
-    document.getElementById('potSlider').value  = e.pot;
-    document.getElementById('empNotes').value   = e.notes || '';
+    $('empName').value    = e.name;
+    $('empRole').value    = e.role  || '';
+    $('empDept').value    = e.dept  || '';
+    $('perfSlider').value = e.perf;
+    $('potSlider').value  = e.pot;
+    $('empNotes').value   = e.notes || '';
   } else {
-    ['empName','empNotes'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('empRole').value    = '';
-    document.getElementById('empDept').value    = '';
-    document.getElementById('perfSlider').value = 2;
-    document.getElementById('potSlider').value  = 2;
+    $('empName').value = $('empRole').value = $('empDept').value = $('empNotes').value = '';
+    $('perfSlider').value = $('potSlider').value = 2;
   }
-  updateSliders();
-  document.getElementById('modal').classList.add('active');
+  updatePreview();
+  $('modal').classList.add('active');
+  $('empName').focus();
 }
 
-function closeModal() {
-  document.getElementById('modal').classList.remove('active');
-  editingId = null;
-}
+function closeModal() { $('modal').classList.remove('active'); editingId = null; }
 
-document.getElementById('modal').addEventListener('click', ev => {
-  if (ev.target === ev.currentTarget) closeModal();
-});
-
-function updateSliders() {
-  const perf = +document.getElementById('perfSlider').value;
-  const pot  = +document.getElementById('potSlider').value;
-  document.getElementById('perfVal').textContent = perf;
-  document.getElementById('potVal').textContent  = pot;
-  const idx  = getBoxIndex(perf, pot);
-  const def  = BOX_DEFS[idx];
-  const c    = BOX_COLORS[idx];
-  const prev = document.getElementById('placementPreview');
-  prev.textContent       = `${def.emoji} ${def.title}`;
-  prev.style.background  = c.bg;
-  prev.style.borderColor = c.border;
-  prev.style.color       = c.text;
+function updatePreview() {
+  const perf = +$('perfSlider').value, pot = +$('potSlider').value;
+  $('perfVal').textContent = perf;
+  $('potVal').textContent  = pot;
+  const idx = boxIdx(perf,pot), d = DEFS[idx], c = COLORS[idx];
+  const p = $('placementPreview');
+  p.textContent = d.emoji + ' ' + d.title;
+  p.style.background = c.bg; p.style.borderColor = c.b; p.style.color = c.t;
 }
 
 function saveEmployee() {
-  const name = document.getElementById('empName').value.trim();
+  const name = $('empName').value.trim();
   if (!name) { alert('Bitte einen Namen eingeben.'); return; }
-  const perf  = +document.getElementById('perfSlider').value;
-  const pot   = +document.getElementById('potSlider').value;
-  const role  = document.getElementById('empRole').value;
-  const dept  = document.getElementById('empDept').value;
-  const notes = document.getElementById('empNotes').value.trim();
-  const idx   = getBoxIndex(perf, pot);
+  const perf  = +$('perfSlider').value;
+  const pot   = +$('potSlider').value;
+  const role  = $('empRole').value;
+  const dept  = $('empDept').value;
+  const notes = $('empNotes').value.trim();
+  const idx   = boxIdx(perf, pot);
   if (editingId) {
     Object.assign(employees.find(e => e.id === editingId), {name,role,dept,perf,pot,boxIndex:idx,notes});
   } else {
-    employees.push({id:Date.now().toString(), name, role, dept, perf, pot, boxIndex:idx, notes});
+    employees.push({id: Date.now().toString(), name, role, dept, perf, pot, boxIndex: idx, notes});
   }
-  save();
   closeModal();
+  save();
 }
 
-function deleteEmployee(id, ev) {
-  if (ev) ev.stopPropagation();
+function deleteEmployee(id) {
   if (!confirm('Mitarbeiter wirklich löschen?')) return;
   employees = employees.filter(e => e.id !== id);
-  if (selectedId === id) { selectedId = null; document.getElementById('detailPanel').classList.remove('active'); }
+  if (selectedId === id) { selectedId = null; $('detailPanel').classList.remove('active'); }
   save();
 }
 
-// ── Drag & Drop ───────────────────────────────────────────────────────────────
-function dragStart(ev) { ev.dataTransfer.setData('text/plain', ev.target.closest('.chip').dataset.id); }
-
-// ── Filter ────────────────────────────────────────────────────────────────────
-function applyFilters() {
-  const role = document.getElementById('filterRole').value;
-  const dept = document.getElementById('filterDept').value;
-  document.getElementById('filterRole').classList.toggle('active', !!role);
-  document.getElementById('filterDept').classList.toggle('active', !!dept);
-  document.querySelectorAll('.chip').forEach(chip => {
-    const matchRole = !role || chip.dataset.role === role;
-    const matchDept = !dept || chip.dataset.dept === dept;
-    chip.classList.toggle('filtered-out', !(matchRole && matchDept));
-  });
+// ═══════════════════════════════════════════════════════════════
+// SORT
+// ═══════════════════════════════════════════════════════════════
+function sortByCol(col) {
+  if (sortCol===col) sortDir*=-1; else { sortCol=col; sortDir=1; }
+  document.querySelectorAll('thead th .sort-icon').forEach(el => el.textContent='↕');
+  document.querySelectorAll('thead th').forEach(th => th.classList.remove('sorted'));
+  const th = document.querySelector('th[data-col="'+col+'"]');
+  if (th) { th.querySelector('.sort-icon').textContent=sortDir===1?'↑':'↓'; th.classList.add('sorted'); }
+  renderTable();
 }
 
-function clearFilters() {
-  ['filterRole','filterDept'].forEach(id => {
-    document.getElementById(id).value = '';
-    document.getElementById(id).classList.remove('active');
-  });
-  document.querySelectorAll('.chip').forEach(c => c.classList.remove('filtered-out'));
-}
-
-// ── Export / Import ───────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+// EXPORT / IMPORT
+// ═══════════════════════════════════════════════════════════════
 function exportJSON() {
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([JSON.stringify(employees,null,2)],{type:'application/json'}));
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(employees,null,2)], {type:'application/json'}));
   a.download = '9box-grid.json'; a.click();
 }
-function importClick() { document.getElementById('importFile').click(); }
-function importJSON(ev) {
-  const file = ev.target.files[0]; if (!file) return;
-  const r = new FileReader();
-  r.onload = e => {
-    try {
-      const data = JSON.parse(e.target.result);
-      if (Array.isArray(data)) { employees = data; save(); }
-    } catch { alert('Ungültige JSON-Datei.'); }
-  };
-  r.readAsText(file); ev.target.value = '';
-}
 
-// ── Boot ──────────────────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  updateSliders();
+// ═══════════════════════════════════════════════════════════════
+// INIT – runs after DOM is fully built
+// ═══════════════════════════════════════════════════════════════
+$('btnNew').onclick   = () => openModal();
+$('btnNew2').onclick  = () => openModal();
+$('btnExport').onclick = exportJSON;
+$('btnImport').onclick = () => $('importFile').click();
+$('importFile').onchange = ev => {
+  const f = ev.target.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = e => { try { const d=JSON.parse(e.target.result); if(Array.isArray(d)){employees=d;save();}} catch{alert('Ungültige JSON-Datei.');} };
+  r.readAsText(f); ev.target.value='';
+};
+$('btnCancel').onclick     = closeModal;
+$('btnSave').onclick       = saveEmployee;
+$('modal').addEventListener('click', ev => { if(ev.target===$('modal')) closeModal(); });
+$('perfSlider').oninput = $('potSlider').oninput = updatePreview;
+$('filterRole').onchange = $('filterDept').onchange = applyGridFilter;
+$('btnClearGrid').onclick = () => {
+  $('filterRole').value=$('filterDept').value='';
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('filtered-out'));
+  $('filterRole').classList.remove('active'); $('filterDept').classList.remove('active');
+};
+$('tblSearch').oninput=$('tblRole').onchange=$('tblDept').onchange=$('tblPerf').onchange=$('tblPot').onchange=renderTable;
+$('btnClearTable').onclick = () => {
+  ['tblSearch','tblRole','tblDept','tblPerf','tblPot'].forEach(id=>{$(id).value='';$(id).classList.remove('active');});
+  renderTable();
+};
+document.querySelectorAll('thead th[data-col]').forEach(th =>
+  th.addEventListener('click', () => sortByCol(th.dataset.col)));
+
+// Initial render (works immediately, no Firebase needed)
+updatePreview();
+render();
+</script>
+
+<!-- Firebase (optional, loads asynchronously) -->
+<script type="module">
+import { initializeApp }                  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getDatabase, ref, set, onValue } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+try {
+  const app = initializeApp({
+    apiKey:            "AIzaSyBRczuB85sUsrYsgXbvvVVm9tJIwdCxMcA",
+    authDomain:        "box-grid-beee8.firebaseapp.com",
+    databaseURL:       "https://box-grid-beee8-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId:         "box-grid-beee8",
+    storageBucket:     "box-grid-beee8.firebasestorage.app",
+    messagingSenderId: "806969453568",
+    appId:             "1:806969453568:web:f5bb3ad5058030df497ce5"
+  });
+  const db  = getDatabase(app);
+  const emp = ref(db, 'employees');
+  window._fbSet = data => set(emp, data);
+  window.fbEnabled = true;
+
+  // Sync indicator
+  const el = document.getElementById('syncStatus');
+  el.textContent = '⟳ Verbinde…'; el.className = 'sync-connecting';
+
+  onValue(emp, snap => {
+    const data = snap.val();
+    // Only update if Firebase has data (avoids overwriting local with empty)
+    if (data) {
+      window.employees = Object.values(data);
+      // Update the employees array in the main script scope
+      const ev = new CustomEvent('fb-data', {detail: Object.values(data)});
+      window.dispatchEvent(ev);
+    }
+    el.textContent = '● Firebase Live'; el.className = 'sync-live';
+  }, err => {
+    console.warn('Firebase error:', err);
+    el.textContent = '✕ Firebase Fehler'; el.className = 'sync-error';
+  });
+} catch(e) {
+  console.warn('Firebase init failed:', e);
+}
+</script>
+
+<script>
+// Listen for Firebase data updates
+window.addEventListener('fb-data', ev => {
+  employees = ev.detail;
+  fbEnabled = true;
+  localStorage.setItem(LS_KEY, JSON.stringify(employees));
+  render();
 });
 </script>
 </body>
