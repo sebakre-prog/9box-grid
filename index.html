@@ -138,8 +138,7 @@ header{padding:1rem 2rem;display:flex;align-items:center;justify-content:space-b
 .emp-delete:hover{color:#d05050;background:#fdd8d8;}
 
 .grid-area{flex:1;display:flex;flex-direction:column;overflow:hidden;}
-.grid-scroll{flex:0 0 auto;overflow:hidden;}
-.table-scroll{flex:1;overflow-y:auto;border-top:2px solid var(--border);}
+.grid-scroll{flex:1;overflow-y:auto;}
 .grid-section{display:flex;flex-direction:column;padding:1.1rem 1.5rem .5rem;gap:.65rem;flex-shrink:0;}
 .axis-label-top{text-align:center;font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:500;}
 .grid-wrapper{display:flex;gap:.5rem;height:440px;}
@@ -180,7 +179,7 @@ header{padding:1rem 2rem;display:flex;align-items:center;justify-content:space-b
 .cell-8{background:var(--box-solid);border-color:var(--box-solid-b);color:var(--box-solid-t);}
 
 /* Table section */
-.table-section{padding:1.5rem;flex-shrink:0;}
+.table-section{padding:1.5rem;border-top:2px solid var(--border);flex-shrink:0;}
 .table-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;gap:1rem;flex-wrap:wrap;}
 .table-header h2{font-family:'DM Serif Display',serif;font-size:1.4rem;}
 .table-toolbar{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;}
@@ -455,7 +454,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;heigh
           </div>
         </div>
 
-        <div class="table-scroll">
         <!-- Table -->
         <div class="table-section">
           <div class="table-header">
@@ -506,9 +504,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;heigh
             <tbody id="empTableBody"></tbody>
           </table>
         </div>
-        </div><!-- /table-scroll -->
-      </div><!-- /grid-scroll -->
-    </div><!-- /grid-area -->
+      </div>
+    </div>
 
     <div class="detail-panel" id="detailPanel">
       <div style="display:flex;justify-content:flex-end;margin-bottom:.5rem;">
@@ -1291,6 +1288,9 @@ const app  = initializeApp(FB_CONFIG);
 const auth = getAuth(app);
 const db   = getDatabase(app);
 
+// Sofort Login-Screen zeigen, bis Firebase Auth antwortet
+showLoginScreen();
+
 // ── UI helpers ───────────────────────────────────────────────
 function showLoginScreen(msg, type) {
   document.getElementById('authScreen').style.display = 'flex';
@@ -1387,4 +1387,13 @@ onAuthStateChanged(auth, user => {
 });
 
 // ── Database sync listener ───────────────────────────────────
-win
+// ── Database sync listener ───────────────────────────────────
+window.addEventListener('fb-data', ev => {
+  window.employees = ev.detail;
+  window.fbEnabled = true;
+  localStorage.setItem('9box-employees', JSON.stringify(ev.detail));
+  if (typeof render === 'function') render();
+});
+</script>
+</body>
+</html>
