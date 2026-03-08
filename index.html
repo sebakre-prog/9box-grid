@@ -275,21 +275,33 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;heigh
   <div style="background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:2.8rem 2.4rem;width:400px;max-width:94vw;box-shadow:0 24px 64px rgba(0,0,0,.13);text-align:center;">
     <div style="font-family:'DM Serif Display',serif;font-size:2.1rem;margin-bottom:.3rem;">9-Box <span style="color:var(--accent);font-style:italic;">Grid</span></div>
     <div style="font-size:.85rem;color:var(--muted);margin-bottom:2rem;">Talentmanagement · Ambit Group</div>
-    <div style="text-align:left;margin-bottom:1.1rem;">
+
+    <div style="text-align:left;margin-bottom:.8rem;">
       <label style="display:block;font-size:.74rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem;">E-Mail-Adresse</label>
       <input id="loginEmail" type="email" placeholder="name@ambit-group.com"
         style="width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;padding:.7rem 1rem;font-family:'DM Sans',sans-serif;font-size:.95rem;color:var(--text);outline:none;transition:border-color .2s;"
         onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"
-        onkeydown="if(event.key==='Enter')window.sendLoginLink()">
+        onkeydown="if(event.key==='Enter')document.getElementById('loginPassword').focus()">
     </div>
-    <button id="btnSendLink" onclick="window.sendLoginLink()"
+
+    <div style="text-align:left;margin-bottom:1.2rem;">
+      <label style="display:block;font-size:.74rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem;">Passwort</label>
+      <input id="loginPassword" type="password" placeholder="••••••••"
+        style="width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;padding:.7rem 1rem;font-family:'DM Sans',sans-serif;font-size:.95rem;color:var(--text);outline:none;transition:border-color .2s;"
+        onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"
+        onkeydown="if(event.key==='Enter')window.doLogin()">
+    </div>
+
+    <button id="btnLogin" onclick="window.doLogin()"
       style="width:100%;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:.78rem;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;transition:background .2s;"
       onmouseover="this.style.background='#1e4bbf'" onmouseout="this.style.background='var(--accent)'">
-      Login-Link senden ✉
+      Anmelden
     </button>
+
     <div id="authMessage" style="margin-top:1rem;font-size:.84rem;padding:.55rem .9rem;border-radius:7px;display:none;"></div>
+
     <div style="margin-top:1.6rem;font-size:.74rem;color:var(--muted);line-height:1.6;border-top:1px solid var(--border);padding-top:1rem;">
-      Du erhältst einen einmaligen Login-Link per E-Mail.<br>Nur autorisierte Adressen haben Zugriff.
+      Nur autorisierte Adressen haben Zugriff.<br>Bei Fragen: sebastian.krepler@ambit-group.com
     </div>
   </div>
 </div>
@@ -1248,11 +1260,10 @@ render();
 
 <!-- Firebase Auth + Database -->
 <script type="module">
-import { initializeApp }                         from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getDatabase, ref, set, onValue }        from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+import { initializeApp }                      from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getDatabase, ref, set, onValue }     from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
 import {
-  getAuth, sendSignInLinkToEmail,
-  isSignInWithEmailLink, signInWithEmailLink,
+  getAuth, signInWithEmailAndPassword,
   onAuthStateChanged, signOut
 } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
@@ -1277,20 +1288,14 @@ const app  = initializeApp(FB_CONFIG);
 const auth = getAuth(app);
 const db   = getDatabase(app);
 
-// ── Helpers ──────────────────────────────────────────────────
-const LOGIN_STORAGE_KEY = '9box-emailForSignIn';
-const SESSION_KEY       = '9box-authSession';
-
-function showLoginScreen(msg) {
-  document.getElementById('authScreen').style.display  = 'flex';
-  document.getElementById('app').style.display         = 'none';
+// ── UI helpers ───────────────────────────────────────────────
+function showLoginScreen(msg, type) {
+  document.getElementById('authScreen').style.display = 'flex';
+  document.getElementById('app').style.display        = 'none';
   const el = document.getElementById('authMessage');
   if (msg) {
-    el.textContent = msg;
-    el.className = '';
-    if (msg.startsWith('✕'))      el.className = 'auth-msg-error';
-    else if (msg.startsWith('✉')) el.className = 'auth-msg-success';
-    else                           el.className = 'auth-msg-info';
+    el.textContent   = msg;
+    el.className     = type || 'auth-msg-error';
     el.style.display = 'block';
   } else {
     el.style.display = 'none';
@@ -1301,7 +1306,6 @@ function showLoginScreen(msg) {
 function showApp(user) {
   document.getElementById('authScreen').style.display = 'none';
   document.getElementById('app').style.display        = 'flex';
-  // Show logged-in user in header
   const badge = document.getElementById('authUserBadge');
   if (badge) { badge.textContent = '👤 ' + user.email; badge.style.display = 'inline-block'; }
   // Connect Realtime Database
@@ -1317,101 +1321,69 @@ function showApp(user) {
   }, () => { statusEl.textContent = '✕ Firebase Fehler'; statusEl.className = 'sync-error'; });
 }
 
-function handleUnauthorised() {
-  signOut(auth);
-  localStorage.removeItem(SESSION_KEY);
-  showLoginScreen('✕ Diese E-Mail-Adresse hat keinen Zugriff.');
-}
-
-// ── Logout button ────────────────────────────────────────────
+// ── Logout ───────────────────────────────────────────────────
 window.doLogout = () => {
   signOut(auth);
-  localStorage.removeItem(SESSION_KEY);
-  showLoginScreen('✓ Abgemeldet. Bis bald!');
+  showLoginScreen(null);
+  // Reset password field
+  const pw = document.getElementById('loginPassword');
+  if (pw) pw.value = '';
 };
 
-// ── Step 1: Send magic link ───────────────────────────────────
-window.sendLoginLink = async () => {
-  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
-  const btn   = document.getElementById('btnSendLink');
-  const msg   = document.getElementById('authMessage');
+// ── Login ────────────────────────────────────────────────────
+window.doLogin = async () => {
+  const email = (document.getElementById('loginEmail').value || '').trim().toLowerCase();
+  const pw    = (document.getElementById('loginPassword').value || '');
+  const btn   = document.getElementById('btnLogin');
 
   const setMsg = (text, cls) => {
-    msg.textContent = text; msg.className = cls; msg.style.display = 'block';
+    const el = document.getElementById('authMessage');
+    el.textContent = text; el.className = cls || 'auth-msg-error'; el.style.display = 'block';
   };
 
-  if (!email || !email.includes('@')) {
-    setMsg('✕ Bitte eine gültige E-Mail-Adresse eingeben.', 'auth-msg-error'); return;
-  }
+  if (!email) { setMsg('✕ Bitte E-Mail-Adresse eingeben.'); return; }
+  if (!pw)    { setMsg('✕ Bitte Passwort eingeben.'); return; }
+
   if (!ALLOWED.includes(email)) {
-    setMsg('✕ Diese E-Mail-Adresse hat keinen Zugriff.', 'auth-msg-error'); return;
+    setMsg('✕ Diese E-Mail-Adresse hat keinen Zugriff.'); return;
   }
 
-  btn.disabled = true; btn.textContent = '⟳ Sende Link…';
+  btn.disabled = true; btn.textContent = '⟳ Anmelden…';
 
   try {
-    await sendSignInLinkToEmail(auth, email, {
-      url: window.location.href,
-      handleCodeInApp: true
-    });
-    localStorage.setItem(LOGIN_STORAGE_KEY, email);
-    setMsg('✉ Link versendet! Prüfe dein Postfach und klicke den Link an.', 'auth-msg-success');
-    document.getElementById('loginEmail').value = '';
-    btn.textContent = '✓ Versendet';
-    // Re-enable after 30s so they can resend if needed
-    setTimeout(() => { btn.disabled = false; btn.textContent = 'Login-Link senden ✉'; }, 30000);
+    await signInWithEmailAndPassword(auth, email, pw);
+    // onAuthStateChanged takes over from here
   } catch(e) {
-    setMsg('✕ Fehler: ' + (e.message || e.code), 'auth-msg-error');
-    btn.disabled = false; btn.textContent = 'Login-Link senden ✉';
+    const msg =
+      e.code === 'auth/invalid-credential'  ? '✕ E-Mail oder Passwort falsch.' :
+      e.code === 'auth/user-not-found'      ? '✕ Kein Konto mit dieser E-Mail gefunden.' :
+      e.code === 'auth/wrong-password'      ? '✕ Passwort falsch.' :
+      e.code === 'auth/too-many-requests'   ? '✕ Zu viele Versuche. Bitte kurz warten.' :
+      '✕ Fehler: ' + (e.code || e.message);
+    setMsg(msg);
+    btn.disabled = false; btn.textContent = 'Anmelden';
   }
 };
 
-// ── Step 2: Handle magic link return ─────────────────────────
-if (isSignInWithEmailLink(auth, window.location.href)) {
-  let email = localStorage.getItem(LOGIN_STORAGE_KEY);
-  if (!email) {
-    // Opened on different device – ask for email
-    email = window.prompt('Bitte gib deine E-Mail-Adresse zur Bestätigung ein:');
-  }
-  if (email) {
-    showLoginScreen('⟳ Verifiziere…');
-    signInWithEmailLink(auth, email.toLowerCase(), window.location.href)
-      .then(result => {
-        localStorage.removeItem(LOGIN_STORAGE_KEY);
-        // Clean URL
-        window.history.replaceState({}, document.title, window.location.pathname);
-        if (!ALLOWED.includes(result.user.email.toLowerCase())) {
-          handleUnauthorised();
-        } else {
-          localStorage.setItem(SESSION_KEY, result.user.email);
-          showApp(result.user);
-        }
-      })
-      .catch(e => showLoginScreen('✕ Link ungültig oder abgelaufen. Bitte neu anfordern. (' + e.code + ')'));
-  }
-}
-
-// ── Auth state observer ───────────────────────────────────────
-// Show login screen immediately while Firebase checks auth state
-if (!isSignInWithEmailLink(auth, window.location.href)) {
-  showLoginScreen(null);
-}
+// ── Auth state observer ──────────────────────────────────────
+showLoginScreen(null); // always start with login screen
 
 onAuthStateChanged(auth, user => {
   if (user) {
     if (!ALLOWED.includes(user.email.toLowerCase())) {
-      handleUnauthorised();
+      signOut(auth);
+      showLoginScreen('✕ Diese E-Mail-Adresse hat keinen Zugriff.');
     } else {
+      const btn = document.getElementById('btnLogin');
+      if (btn) { btn.disabled = false; btn.textContent = 'Anmelden'; }
       showApp(user);
     }
   } else {
-    if (!isSignInWithEmailLink(auth, window.location.href)) {
-      showLoginScreen(null);
-    }
+    showLoginScreen(null);
   }
 });
 
-// ── Database sync listener ────────────────────────────────────
+// ── Database sync listener ───────────────────────────────────
 window.addEventListener('fb-data', ev => {
   window.employees = ev.detail;
   window.fbEnabled = true;
