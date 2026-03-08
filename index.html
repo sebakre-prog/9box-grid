@@ -137,8 +137,8 @@ header{padding:1rem 2rem;display:flex;align-items:center;justify-content:space-b
 .employee-card:hover .emp-delete{opacity:1;}
 .emp-delete:hover{color:#d05050;background:#fdd8d8;}
 
-.grid-area{flex:1;display:flex;flex-direction:column;overflow:hidden;}
-.grid-scroll{flex:1;overflow-y:auto;display:flex;flex-direction:column;}
+.grid-area{flex:1;display:flex;flex-direction:column;overflow-y:auto;}
+.grid-scroll{flex:1;display:flex;flex-direction:column;}
 .grid-section{display:flex;flex-direction:column;padding:1.1rem 1.5rem .5rem;gap:.65rem;flex-shrink:0;}
 .axis-label-top{text-align:center;font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:500;}
 .grid-wrapper{display:flex;gap:.5rem;height:440px;}
@@ -298,7 +298,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;heigh
   <header>
     <div class="header-title">
       <h1>9-Box <span>Grid</span></h1>
-      <p>Talentmanagement &amp; Mitarbeiterbeurteilung</p>
+      <p>Talentmanagement &amp; Mitarbeiterbeurteilung <span style="font-size:.7rem;color:var(--muted);background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:.1rem .45rem;margin-left:.3rem;vertical-align:middle;">v1.4</span></p>
     </div>
     <div class="header-right">
       <span id="syncStatus" class="sync-local">◉ Lokal</span>
@@ -388,6 +388,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;heigh
       <option value="">Alle Rollen</option>
       <option>DEV</option><option value="DEV & PPE">DEV &amp; PPE</option>
       <option>PM</option><option>PPE</option><option>SA</option><option value="BU Lead">BU Lead</option>
+      <option value="Sales/BDM">Sales/BDM</option>
     </select>
     <div class="filter-divider"></div>
     <span class="f-label" style="font-weight:400">Abteilung</span>
@@ -451,6 +452,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;heigh
                 <option value="">Alle Rollen</option>
                 <option>DEV</option><option value="DEV & PPE">DEV &amp; PPE</option>
                 <option>PM</option><option>PPE</option><option>SA</option><option value="BU Lead">BU Lead</option>
+                <option value="Sales/BDM">Sales/BDM</option>
               </select>
               <select class="table-filter-sel" id="tblDept">
                 <option value="">Alle Abteilungen</option>
@@ -494,6 +496,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;heigh
     </div>
 
     <div class="detail-panel" id="detailPanel">
+      <div style="display:flex;justify-content:flex-end;margin-bottom:.5rem;">
+        <button onclick="document.getElementById('detailPanel').classList.remove('active');window.selectedId=null;" style="background:none;border:1px solid var(--border);border-radius:6px;padding:.25rem .6rem;cursor:pointer;color:var(--muted);font-size:.82rem;" title="Schliessen">✕</button>
+      </div>
       <div id="detailContent"></div>
     </div>
   </div>
@@ -517,6 +522,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;heigh
           <option value="">– bitte wählen –</option>
           <option>DEV</option><option value="DEV & PPE">DEV &amp; PPE</option>
           <option>PM</option><option>PPE</option><option>SA</option><option value="BU Lead">BU Lead</option>
+          <option value="Sales/BDM">Sales/BDM</option>
         </select>
       </div>
       <div class="form-group">
@@ -1386,6 +1392,11 @@ if (isSignInWithEmailLink(auth, window.location.href)) {
 }
 
 // ── Auth state observer ───────────────────────────────────────
+// Show login screen immediately while Firebase checks auth state
+if (!isSignInWithEmailLink(auth, window.location.href)) {
+  showLoginScreen(null);
+}
+
 onAuthStateChanged(auth, user => {
   if (user) {
     if (!ALLOWED.includes(user.email.toLowerCase())) {
@@ -1394,7 +1405,6 @@ onAuthStateChanged(auth, user => {
       showApp(user);
     }
   } else {
-    // Not logged in – show login screen unless we're processing a link
     if (!isSignInWithEmailLink(auth, window.location.href)) {
       showLoginScreen(null);
     }
