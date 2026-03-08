@@ -137,8 +137,8 @@ header{padding:1rem 2rem;display:flex;align-items:center;justify-content:space-b
 .employee-card:hover .emp-delete{opacity:1;}
 .emp-delete:hover{color:#d05050;background:#fdd8d8;}
 
-.grid-area{flex:1;display:flex;flex-direction:column;overflow-y:auto;}
-.grid-scroll{flex:1;display:flex;flex-direction:column;}
+.grid-area{flex:1;display:flex;flex-direction:column;overflow-y:auto;min-height:0;}
+.grid-scroll{display:flex;flex-direction:column;}
 .grid-section{display:flex;flex-direction:column;padding:1.1rem 1.5rem .5rem;gap:.65rem;flex-shrink:0;}
 .axis-label-top{text-align:center;font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:500;}
 .grid-wrapper{display:flex;gap:.5rem;height:440px;}
@@ -301,7 +301,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;heigh
     <div id="authMessage" style="margin-top:1rem;font-size:.84rem;padding:.55rem .9rem;border-radius:7px;display:none;"></div>
 
     <div style="margin-top:1.6rem;font-size:.74rem;color:var(--muted);line-height:1.6;border-top:1px solid var(--border);padding-top:1rem;">
-      Nur autorisierte Adressen haben Zugriff.<br>Bei Fragen: sebastian.krepler@ambit-group.com
+      Nur autorisierte Adressen haben Zugriff.<br>Bei Fragen: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b2c1d7d0d3c1c6dbd3dc9cd9c0d7c2ded7c0f2d3dfd0dbc69fd5c0ddc7c29cd1dddf">[email&#160;protected]</a>
     </div>
   </div>
 </div>
@@ -621,7 +621,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;heigh
   </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ═══════════════════════════════════════════════════════════════
 // CONSTANTS
 // ═══════════════════════════════════════════════════════════════
@@ -1384,12 +1384,4 @@ onAuthStateChanged(auth, user => {
 });
 
 // ── Database sync listener ───────────────────────────────────
-window.addEventListener('fb-data', ev => {
-  window.employees = ev.detail;
-  window.fbEnabled = true;
-  localStorage.setItem('9box-employees', JSON.stringify(ev.detail));
-  if (typeof render === 'function') render();
-});
-</script>
-</body>
-</html>
+win
