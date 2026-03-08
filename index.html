@@ -84,7 +84,11 @@ header{padding:1rem 2rem;display:flex;align-items:center;justify-content:space-b
 .btn-add-action:hover{border-color:var(--accent);color:var(--accent);}
 .actions-summary{font-size:.76rem;color:var(--muted);margin-top:.25rem;}
 
-/* Help button & floating panel */
+/* Auth message styles */
+.auth-msg-info    { display:block!important; background:#eef2fd; color:#1a3d9a; border:1px solid #6090e0; }
+.auth-msg-success { display:block!important; background:#e8f8e8; color:#1a6b1a; border:1px solid #5db85d; }
+.auth-msg-error   { display:block!important; background:#fdd8d8; color:#7a1a1a; border:1px solid #d05050; }
+
 .help-wrap{position:relative;}
 .btn-help{width:30px;height:30px;border-radius:50%;border:2px solid var(--border);background:var(--surface2);color:var(--muted);font-size:.88rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
 .btn-help:hover{border-color:var(--accent);color:var(--accent);background:#eef2fd;}
@@ -265,7 +269,32 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;heigh
 </style>
 </head>
 <body>
-<div class="app">
+
+<!-- LOGIN SCREEN -->
+<div id="authScreen" style="display:none;position:fixed;inset:0;z-index:9000;background:var(--bg);align-items:center;justify-content:center;">
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:2.8rem 2.4rem;width:400px;max-width:94vw;box-shadow:0 24px 64px rgba(0,0,0,.13);text-align:center;">
+    <div style="font-family:'DM Serif Display',serif;font-size:2.1rem;margin-bottom:.3rem;">9-Box <span style="color:var(--accent);font-style:italic;">Grid</span></div>
+    <div style="font-size:.85rem;color:var(--muted);margin-bottom:2rem;">Talentmanagement · Ambit Group</div>
+    <div style="text-align:left;margin-bottom:1.1rem;">
+      <label style="display:block;font-size:.74rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem;">E-Mail-Adresse</label>
+      <input id="loginEmail" type="email" placeholder="name@ambit-group.com"
+        style="width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;padding:.7rem 1rem;font-family:'DM Sans',sans-serif;font-size:.95rem;color:var(--text);outline:none;transition:border-color .2s;"
+        onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"
+        onkeydown="if(event.key==='Enter')window.sendLoginLink()">
+    </div>
+    <button id="btnSendLink" onclick="window.sendLoginLink()"
+      style="width:100%;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:.78rem;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;transition:background .2s;"
+      onmouseover="this.style.background='#1e4bbf'" onmouseout="this.style.background='var(--accent)'">
+      Login-Link senden ✉
+    </button>
+    <div id="authMessage" style="margin-top:1rem;font-size:.84rem;padding:.55rem .9rem;border-radius:7px;display:none;"></div>
+    <div style="margin-top:1.6rem;font-size:.74rem;color:var(--muted);line-height:1.6;border-top:1px solid var(--border);padding-top:1rem;">
+      Du erhältst einen einmaligen Login-Link per E-Mail.<br>Nur autorisierte Adressen haben Zugriff.
+    </div>
+  </div>
+</div>
+
+<div class="app" id="app" style="display:none;">
   <header>
     <div class="header-title">
       <h1>9-Box <span>Grid</span></h1>
@@ -281,6 +310,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;heigh
       <button class="btn btn-ghost" id="btnImport">↑ Import</button>
       <input type="file" id="importFile" accept=".json" style="display:none">
       <button class="btn btn-primary" id="btnNew">+ Mitarbeiter</button>
+      <span id="authUserBadge" style="display:none;font-size:.78rem;color:var(--muted);padding:.3rem .7rem;background:var(--surface2);border:1px solid var(--border);border-radius:20px;white-space:nowrap;"></span>
+      <button class="btn btn-ghost" onclick="window.doLogout()" title="Abmelden" style="padding:.45rem .7rem;">⎋ Logout</button>
       <div class="help-wrap">
         <button class="btn-help" id="btnHelp" title="Bedienungsanleitung">?</button>
         <div class="help-panel" id="helpPanel">
@@ -1209,39 +1240,173 @@ updatePreview();
 render();
 </script>
 
-<!-- Firebase (optional, loads async) -->
+<!-- Firebase Auth + Database -->
 <script type="module">
-import { initializeApp }                  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getDatabase, ref, set, onValue } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
-try {
-  const app=initializeApp({
-    apiKey:"AIzaSyBRczuB85sUsrYsgXbvvVVm9tJIwdCxMcA",
-    authDomain:"box-grid-beee8.firebaseapp.com",
-    databaseURL:"https://box-grid-beee8-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId:"box-grid-beee8",
-    storageBucket:"box-grid-beee8.firebasestorage.app",
-    messagingSenderId:"806969453568",
-    appId:"1:806969453568:web:f5bb3ad5058030df497ce5"
-  });
-  const db=getDatabase(app), empRef=ref(db,'employees');
-  window._fbSet=data=>set(empRef,data);
-  const el=document.getElementById('syncStatus');
-  el.textContent='⟳ Verbinde…'; el.className='sync-connecting';
-  onValue(empRef,snap=>{
-    const data=snap.val();
-    if(data){
-      window.dispatchEvent(new CustomEvent('fb-data',{detail:Object.values(data)}));
+import { initializeApp }                         from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getDatabase, ref, set, onValue }        from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+import {
+  getAuth, sendSignInLinkToEmail,
+  isSignInWithEmailLink, signInWithEmailLink,
+  onAuthStateChanged, signOut
+} from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+
+// ── Whitelist ────────────────────────────────────────────────
+const ALLOWED = [
+  'thomas.lewandowski@ambit-group.com',
+  'mathieu.schmidhauser@ambit-group.com',
+  'sebastian.krepler@ambit-group.com'
+];
+
+const FB_CONFIG = {
+  apiKey:            'AIzaSyBRczuB85sUsrYsgXbvvVVm9tJIwdCxMcA',
+  authDomain:        'box-grid-beee8.firebaseapp.com',
+  databaseURL:       'https://box-grid-beee8-default-rtdb.europe-west1.firebasedatabase.app',
+  projectId:         'box-grid-beee8',
+  storageBucket:     'box-grid-beee8.firebasestorage.app',
+  messagingSenderId: '806969453568',
+  appId:             '1:806969453568:web:f5bb3ad5058030df497ce5'
+};
+
+const app  = initializeApp(FB_CONFIG);
+const auth = getAuth(app);
+const db   = getDatabase(app);
+
+// ── Helpers ──────────────────────────────────────────────────
+const LOGIN_STORAGE_KEY = '9box-emailForSignIn';
+const SESSION_KEY       = '9box-authSession';
+
+function showLoginScreen(msg) {
+  document.getElementById('authScreen').style.display  = 'flex';
+  document.getElementById('app').style.display         = 'none';
+  const el = document.getElementById('authMessage');
+  if (msg) {
+    el.textContent = msg;
+    el.className = '';
+    if (msg.startsWith('✕'))      el.className = 'auth-msg-error';
+    else if (msg.startsWith('✉')) el.className = 'auth-msg-success';
+    else                           el.className = 'auth-msg-info';
+    el.style.display = 'block';
+  } else {
+    el.style.display = 'none';
+    el.textContent   = '';
+  }
+}
+
+function showApp(user) {
+  document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('app').style.display        = 'flex';
+  // Show logged-in user in header
+  const badge = document.getElementById('authUserBadge');
+  if (badge) { badge.textContent = '👤 ' + user.email; badge.style.display = 'inline-block'; }
+  // Connect Realtime Database
+  const empRef = ref(db, 'employees');
+  window._fbSet = data => set(empRef, data);
+  window.fbEnabled = true;
+  const statusEl = document.getElementById('syncStatus');
+  statusEl.textContent = '⟳ Verbinde…'; statusEl.className = 'sync-connecting';
+  onValue(empRef, snap => {
+    const data = snap.val();
+    if (data) window.dispatchEvent(new CustomEvent('fb-data', { detail: Object.values(data) }));
+    statusEl.textContent = '● Firebase Live'; statusEl.className = 'sync-live';
+  }, () => { statusEl.textContent = '✕ Firebase Fehler'; statusEl.className = 'sync-error'; });
+}
+
+function handleUnauthorised() {
+  signOut(auth);
+  localStorage.removeItem(SESSION_KEY);
+  showLoginScreen('✕ Diese E-Mail-Adresse hat keinen Zugriff.');
+}
+
+// ── Logout button ────────────────────────────────────────────
+window.doLogout = () => {
+  signOut(auth);
+  localStorage.removeItem(SESSION_KEY);
+  showLoginScreen('✓ Abgemeldet. Bis bald!');
+};
+
+// ── Step 1: Send magic link ───────────────────────────────────
+window.sendLoginLink = async () => {
+  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  const btn   = document.getElementById('btnSendLink');
+  const msg   = document.getElementById('authMessage');
+
+  const setMsg = (text, cls) => {
+    msg.textContent = text; msg.className = cls; msg.style.display = 'block';
+  };
+
+  if (!email || !email.includes('@')) {
+    setMsg('✕ Bitte eine gültige E-Mail-Adresse eingeben.', 'auth-msg-error'); return;
+  }
+  if (!ALLOWED.includes(email)) {
+    setMsg('✕ Diese E-Mail-Adresse hat keinen Zugriff.', 'auth-msg-error'); return;
+  }
+
+  btn.disabled = true; btn.textContent = '⟳ Sende Link…';
+
+  try {
+    await sendSignInLinkToEmail(auth, email, {
+      url: window.location.href,
+      handleCodeInApp: true
+    });
+    localStorage.setItem(LOGIN_STORAGE_KEY, email);
+    setMsg('✉ Link versendet! Prüfe dein Postfach und klicke den Link an.', 'auth-msg-success');
+    document.getElementById('loginEmail').value = '';
+    btn.textContent = '✓ Versendet';
+    // Re-enable after 30s so they can resend if needed
+    setTimeout(() => { btn.disabled = false; btn.textContent = 'Login-Link senden ✉'; }, 30000);
+  } catch(e) {
+    setMsg('✕ Fehler: ' + (e.message || e.code), 'auth-msg-error');
+    btn.disabled = false; btn.textContent = 'Login-Link senden ✉';
+  }
+};
+
+// ── Step 2: Handle magic link return ─────────────────────────
+if (isSignInWithEmailLink(auth, window.location.href)) {
+  let email = localStorage.getItem(LOGIN_STORAGE_KEY);
+  if (!email) {
+    // Opened on different device – ask for email
+    email = window.prompt('Bitte gib deine E-Mail-Adresse zur Bestätigung ein:');
+  }
+  if (email) {
+    showLoginScreen('⟳ Verifiziere…');
+    signInWithEmailLink(auth, email.toLowerCase(), window.location.href)
+      .then(result => {
+        localStorage.removeItem(LOGIN_STORAGE_KEY);
+        // Clean URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+        if (!ALLOWED.includes(result.user.email.toLowerCase())) {
+          handleUnauthorised();
+        } else {
+          localStorage.setItem(SESSION_KEY, result.user.email);
+          showApp(result.user);
+        }
+      })
+      .catch(e => showLoginScreen('✕ Link ungültig oder abgelaufen. Bitte neu anfordern. (' + e.code + ')'));
+  }
+}
+
+// ── Auth state observer ───────────────────────────────────────
+onAuthStateChanged(auth, user => {
+  if (user) {
+    if (!ALLOWED.includes(user.email.toLowerCase())) {
+      handleUnauthorised();
+    } else {
+      showApp(user);
     }
-    el.textContent='● Firebase Live'; el.className='sync-live';
-  },err=>{el.textContent='✕ Firebase Fehler';el.className='sync-error';});
-}catch(e){console.warn('Firebase init failed:',e);}
-</script>
-<script>
-window.addEventListener('fb-data',ev=>{
-  employees=ev.detail;
-  fbEnabled=true;
-  localStorage.setItem('9box-employees',JSON.stringify(employees));
-  render();
+  } else {
+    // Not logged in – show login screen unless we're processing a link
+    if (!isSignInWithEmailLink(auth, window.location.href)) {
+      showLoginScreen(null);
+    }
+  }
+});
+
+// ── Database sync listener ────────────────────────────────────
+window.addEventListener('fb-data', ev => {
+  window.employees = ev.detail;
+  window.fbEnabled = true;
+  localStorage.setItem('9box-employees', JSON.stringify(ev.detail));
+  if (typeof render === 'function') render();
 });
 </script>
 </body>
